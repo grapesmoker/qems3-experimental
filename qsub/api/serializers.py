@@ -111,4 +111,3 @@ class BonusSerializer(serializers.ModelSerializer):
         fields = ['leadin', 'part1_text', 'part1_answer', 'part2_text', 'part2_answer', 'part3_text', 'part3_answer',
                   'category', 'subtype', 'time_period', 'location', 'question_type', 'author', 'locked', 'edited',
                   'question_number', 'editor']
-

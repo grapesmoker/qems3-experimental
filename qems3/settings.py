@@ -87,7 +87,7 @@ WSGI_APPLICATION = 'qems3.wsgi.application'
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
 DATABASES = {
-    'default': env.db('DATABASE_URL', default='postgres://qems@localhost/qems3')
+    'default': env.db('DATABASE_URL', default='postgres://qems:django@localhost:5432/qems3')
 }
 
 

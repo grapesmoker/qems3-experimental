@@ -42,9 +42,11 @@ class QuestionSet (models.Model):
     owner = models.ForeignKey('Writer', related_name='owner', on_delete=models.CASCADE)
     public = models.BooleanField(null=False, default=False)
     num_packets = models.PositiveIntegerField()
-    distribution = models.ForeignKey('Distribution', null=True, on_delete=models.SET_NULL)
+    distribution = models.ForeignKey('Distribution', null=True, on_delete=models.SET_NULL,
+                                     related_name='distribution')
+    tiebreak_dist = models.ForeignKey('Distribution', null=True, on_delete=models.SET_NULL,
+                                      related_name='tiebreak_dist')
 
-    tiebreak_dist = models.ForeignKey('TieBreakDistribution', null=True, on_delete=models.SET_NULL)
     max_acf_tossup_length = models.PositiveIntegerField(default=750)
     max_acf_bonus_length = models.PositiveIntegerField(default=400)
     max_vhsl_bonus_length = models.PositiveIntegerField(default=100)
@@ -106,7 +108,9 @@ class CategoryEntry(models.Model):
     category_name = models.CharField(max_length=200)
     sub_category_name = models.CharField(max_length=200, null=True)
     sub_sub_category_name = models.CharField(max_length=200, null=True)
-    category_type = models.CharField(max_length=200, choices=('Category', 'SubCategory', 'SubSubCategory'))
+    category_type = models.CharField(max_length=200, choices=(('Category', 'Category'),
+                                                              ('SubCategory', 'Subcategory'),
+                                                              ('SubSubCategory', 'SubSubCategory')))
 
     # Min/max questions of this type for one period
     # i.e. 2.2, which means between 2 and 3 weighted towards 2
