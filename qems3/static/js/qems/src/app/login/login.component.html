@@ -1,3 +1,18 @@
-<p>
-  login works!
-</p>
+<div class="login-wrapper">
+  <form class="login">
+    <section class="title">
+      <h3 class="welcome">QEMS3 Login</h3>
+      <h5 class="hint">Sign in or create an account</h5>
+    </section>
+    <div class="login-group">
+      <clr-input-container>
+        <input clrInput type="text" [(ngModel)]="username" placeholder="Username" name="username" />
+      </clr-input-container>
+      <clr-password-container>
+        <input clrPassword type="password" [(ngModel)]="password" placeholder="Password" name="password" />
+      </clr-password-container>
+      <button type="button" class="btn btn-primary" (click)="login()">Login</button>
+      <a routerLink="/register" class="signup">Register</a>
+    </div>
+  </form>
+</div>

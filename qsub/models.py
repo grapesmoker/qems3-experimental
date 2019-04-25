@@ -24,10 +24,12 @@ class Writer(models.Model):
     administrator = models.BooleanField(null=False, default=False)
     send_mail_on_comments = models.BooleanField(null=False, default=False)
 
-    def get_real_name(self):
+    @property
+    def real_name(self):
         return '{0!s} {1!s} '.format(self.user.first_name, self.user.last_name)
 
-    def get_last_name(self):
+    @property
+    def last_name(self):
         return self.user.last_name
 
     def __str__(self):
@@ -104,6 +106,10 @@ class Distribution(models.Model):
 # Contains no set-specific information, but does contain info on absolute
 # number of tossups (rather than percentages)
 class CategoryEntry(models.Model):
+
+    class Meta:
+        verbose_name_plural = 'category entries'
+
     distribution = models.ForeignKey(Distribution, on_delete=models.CASCADE)
     category_name = models.CharField(max_length=200)
     sub_category_name = models.CharField(max_length=200, null=True)
@@ -122,24 +128,6 @@ class CategoryEntry(models.Model):
     min_total_questions_in_period = models.PositiveIntegerField(null=True)
     max_total_questions_in_period = models.PositiveIntegerField(null=True)
 
-    def get_acf_tossup_integer(self):
-        return int(self.acf_tossup_fraction)
-
-    def get_acf_tossup_remainder(self):
-        return self.acf_tossup_fraction - self.get_acf_tossup_integer()
-
-    def get_acf_bonus_integer(self):
-        return int(self.acf_bonus_fraction)
-
-    def get_acf_bonus_remainder(self):
-        return self.acf_bonus_fraction - self.get_acf_bonus_integer()
-
-    def get_vhsl_bonus_integer(self):
-        return int(self.vhsl_bonus_fraction)
-
-    def get_vhsl_bonus_remainder(self):
-        return self.vhsl_bonus_fraction - self.get_vhsl_bonus_integer()
-
     def __str__(self):
         if (self.sub_sub_category_name is not None):
             return '{0!s} - {1!s} - {2!s}'.format(self.category_name, self.sub_category_name,
@@ -151,6 +139,10 @@ class CategoryEntry(models.Model):
 
 
 class DistributionEntry(models.Model):
+
+    class Meta:
+        verbose_name_plural = 'distribution entries'
+
     distribution = models.ForeignKey(Distribution, on_delete=models.CASCADE)
     category = models.TextField()
     subcategory = models.TextField()
@@ -279,6 +271,10 @@ class Tossup(models.Model, TossupFormatterMixin):
 
 
 class Bonus(models.Model, BonusFormattedMixin):
+
+    class Meta:
+        verbose_name_plural = 'bonuses'
+
     packet = models.ForeignKey(Packet, null=True, on_delete=models.SET_NULL)
     question_set = models.ForeignKey(QuestionSet, null=True, on_delete=models.SET_NULL)
 
