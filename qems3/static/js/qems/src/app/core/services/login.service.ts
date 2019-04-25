@@ -12,7 +12,7 @@ export class LoginService {
   constructor(private httpClient: HttpClient) { }
 
   login(username: string, password: string) {
-    return this.httpClient.post<any>(`${this.API_URL}/rest-auth/login`, { username, password})
+    return this.httpClient.post<any>(`${this.API_URL}/rest-auth/login/`, { username, password})
     .pipe(map(user => {
       console.log(user);
 
