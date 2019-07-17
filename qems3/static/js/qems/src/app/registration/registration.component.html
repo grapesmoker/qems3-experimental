@@ -1,8 +1,8 @@
 <div class="login-wrapper">
   <form class="login">
     <section class="title">
-      <h3 class="welcome">QEMS3 Login</h3>
-      <h5 class="hint">Sign in or create an account</h5>
+      <h3 class="welcome">QEMS3 Registration</h3>
+      <h5 class="hint">Create an account</h5>
     </section>
     <div class="login-group">
       <clr-input-container>
@@ -12,10 +12,13 @@
         <input clrInput type="text" [(ngModel)]="email" placeholder="Email" name="email" />
       </clr-input-container>
       <clr-password-container>
-        <input clrPassword type="password" [(ngModel)]="password" placeholder="Password" name="password" />
+        <input clrPassword type="password" [(ngModel)]="password1" placeholder="Enter Password" name="password1" />
       </clr-password-container>
-      <button type="button" class="btn btn-primary" (click)="login()">Login</button>
-      <a routerLink="/register" class="signup">Register</a>
+      <clr-password-container>
+        <input clrPassword type="password" [(ngModel)]="password2" placeholder="Re-enter Password" name="password2" />
+      </clr-password-container>
+      
+      <button type="button" class="btn btn-primary" (click)="register()">Register</button>
     </div>
   </form>
 </div>

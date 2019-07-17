@@ -11,11 +11,13 @@ import { MatInputModule, MatButtonModule, MatTableModule, MatFormFieldModule,
   MatToolbarModule, MatSidenavModule, MatIconModule, MatListModule, MatCardModule } from '@angular/material';
 import { LayoutModule } from '@angular/cdk/layout';
 import { ClarityModule } from '@clr/angular';
+import { RegistrationComponent } from './registration/registration/registration.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent
+    LoginComponent,
+    RegistrationComponent
   ],
   imports: [
     BrowserModule,
