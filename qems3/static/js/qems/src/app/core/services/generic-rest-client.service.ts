@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-
+import { BASE_URL } from '../../constants';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +18,7 @@ export class GenericRestClientService<T> {
         actualUrl = actualUrl.replace(`:${key}`, `${value}`);
       }
     }
-    return actualUrl.replace(/:[^\/]*\/?/g, '').replace(/\/$/, '');
+    return BASE_URL + actualUrl.replace(/:[^\/]*\/?/g, '').replace(/\/$/, '');
   }
 
   get apiUrl(): string {
@@ -33,6 +33,7 @@ export class GenericRestClientService<T> {
     urlParams: { [key: string]: string | number } = {},
     httpOptions?: { [key: string]: any }
     ): Observable<T> {
+      console.log(this.convertUrlParams(urlParams));
       return this.httpClient.get<T>(this.convertUrlParams(urlParams), httpOptions)
   }
 

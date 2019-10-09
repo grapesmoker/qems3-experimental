@@ -50,7 +50,8 @@ THIRD_PARTY_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
-    'rest_auth.registration'
+    'rest_auth.registration',
+    'django_extensions'
 ]
 
 LOCAL_APPS = [
@@ -100,6 +101,14 @@ WSGI_APPLICATION = 'qems3.wsgi.application'
 
 DATABASES = {
     'default': env.db('DATABASE_URL', default='postgres://qems:django@localhost:5432/qems3')
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ]
 }
 
 
