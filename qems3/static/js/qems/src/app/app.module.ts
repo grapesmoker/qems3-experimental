@@ -12,11 +12,13 @@ import { MatInputModule, MatButtonModule, MatTableModule, MatFormFieldModule,
 import { LayoutModule } from '@angular/cdk/layout';
 import { ClarityModule } from '@clr/angular';
 import { AuthInterceptor } from './core/interceptors/auth-interceptor';
+// import { RegistrationComponent } from './registration/registration/registration.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent
+    LoginComponent,
+    //RegistrationComponent
   ],
   imports: [
     BrowserModule,

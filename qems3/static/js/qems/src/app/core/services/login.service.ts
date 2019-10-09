@@ -4,6 +4,7 @@ import { map } from 'rxjs/operators';
 import { User } from '../../types';
 import { UserService } from '../services/user.service';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -22,5 +23,17 @@ export class LoginService {
     .pipe(map(token => {
       return token['key'];
     }))
+  }
+
+  register(username: string, email: string, password1: string, password2: string) {
+    if (password1 !== password2) {
+      //return new Observable<string>("Passwords don't match");
+    } else {
+      return this.httpClient.post<any>(`${this.API_URL}/rest-auth/register`,  {'username': username, 'email': email, 'password': password1})
+      .pipe(map(user => {
+        console.log(user);
+        return user;
+      }))
+    }
   }
 }
