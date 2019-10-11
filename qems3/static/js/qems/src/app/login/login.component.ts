@@ -33,6 +33,7 @@ export class LoginComponent implements OnInit {
       this.userService.getItem().subscribe(
         profile => {
           console.log(profile);
+          this.router.navigateByUrl('/');
         }
       )
     });

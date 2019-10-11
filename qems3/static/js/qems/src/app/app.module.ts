@@ -5,6 +5,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
+import { RegistrationComponent } from './registration/registration.component';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule, MatButtonModule, MatTableModule, MatFormFieldModule, 
@@ -12,13 +13,15 @@ import { MatInputModule, MatButtonModule, MatTableModule, MatFormFieldModule,
 import { LayoutModule } from '@angular/cdk/layout';
 import { ClarityModule } from '@clr/angular';
 import { AuthInterceptor } from './core/interceptors/auth-interceptor';
+import { NewTournamentComponent } from './core/modals/new-tournament/new-tournament.component';
 // import { RegistrationComponent } from './registration/registration/registration.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    //RegistrationComponent
+    RegistrationComponent,
+    NewTournamentComponent,
   ],
   imports: [
     BrowserModule,
