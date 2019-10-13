@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
@@ -14,6 +14,7 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { ClarityModule } from '@clr/angular';
 import { AuthInterceptor } from './core/interceptors/auth-interceptor';
 import { NewTournamentComponent } from './core/modals/new-tournament/new-tournament.component';
+import { NewDistributionComponent } from './core/modals/new-distribution/new-distribution.component';
 // import { RegistrationComponent } from './registration/registration/registration.component';
 
 @NgModule({
@@ -22,11 +23,13 @@ import { NewTournamentComponent } from './core/modals/new-tournament/new-tournam
     LoginComponent,
     RegistrationComponent,
     NewTournamentComponent,
+    NewDistributionComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
     MatButtonModule,

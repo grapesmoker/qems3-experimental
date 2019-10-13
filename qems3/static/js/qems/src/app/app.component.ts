@@ -12,8 +12,8 @@ export class AppComponent implements AfterViewInit {
   @ViewChild(NewTournamentComponent) modal: NewTournamentComponent;
 
   ngAfterViewInit(): void {
-    this.modal.onOk.subscribe(tournament => {
-      console.log(tournament);
+    this.modal.onOk.subscribe(questionSet => {
+      console.log(questionSet);
     });
   }
 }

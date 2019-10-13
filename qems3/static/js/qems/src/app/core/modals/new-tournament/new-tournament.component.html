@@ -1,10 +1,27 @@
-<clr-modal [(clrModalOpen)]="basic">
+<clr-modal [(clrModalOpen)]="show">
   <h3 class="modal-title">New Tournament</h3>
   <div class="modal-body">
-    Some form goes here
+    <form clrForm>
+      <clr-input-container>
+        <label>Set Name</label>
+        <input clrInput type="text" [formControl]="name">
+      </clr-input-container>
+      <clr-input-container>
+        <label>Due Date</label>
+        <input clrInput type="text" [formControl]="dueDate">
+      </clr-input-container>
+      <clr-input-container>
+        <label>Number of Packets</label>
+        <input clrInput type="text" [formControl]="numberOfPackets">
+      </clr-input-container>
+      <clr-input-container>
+        <label>Distribution</label>
+        <input clrInput type="text" [formControl]="distribution">
+      </clr-input-container>
+    </form>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-outline" (click)="onCancel">Cancel</button>
-    <button type="submit" class="btn btn-primary" (click)="onOk">Ok</button>
+    <button type="button" class="btn btn-outline" (click)="onCancel()">Cancel</button>
+    <button type="submit" class="btn btn-primary" (click)="onSubmit()">Ok</button>
   </div>
 </clr-modal>
