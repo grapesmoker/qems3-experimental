@@ -1,0 +1,16 @@
+<nav class="sidenav">
+  <section class="sidenav-content">
+    <a class="nav-link" (click)="modal.open()">
+      <clr-icon shape="plus-circle"></clr-icon> New Distribution
+    </a>
+    <section class="nav-group collapsible">
+      <input id="distributions" type="checkbox">
+      <label for="distributions">Distributions</label>
+      <ul class="nav-list">
+        <li><a href="#" class="nav-link">dist 1</a></li>
+        <li><a href="#" class="nav-link">dist 2</a></li>
+      </ul>
+    </section>
+  </section>
+</nav>
+<new-distribution-modal></new-distribution-modal>
