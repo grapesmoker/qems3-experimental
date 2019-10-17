@@ -16,3 +16,9 @@ export class QuestionSet {
     public: boolean;
     num_packets: number;
 }
+
+export class Distribution {
+    name: string;
+    tossups_per_packet: number;
+    bonuses_per_packet: number;
+}

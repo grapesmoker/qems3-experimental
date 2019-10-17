@@ -15,7 +15,8 @@ import { ClarityModule } from '@clr/angular';
 import { AuthInterceptor } from './core/interceptors/auth-interceptor';
 import { NewTournamentComponent } from './core/modals/new-tournament/new-tournament.component';
 import { NewDistributionComponent } from './core/modals/new-distribution/new-distribution.component';
-// import { RegistrationComponent } from './registration/registration/registration.component';
+import { SetsComponent } from './core/components/sets/sets.component';
+import { DistributionsComponent } from './core/components/distributions/distributions.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,8 @@ import { NewDistributionComponent } from './core/modals/new-distribution/new-dis
     RegistrationComponent,
     NewTournamentComponent,
     NewDistributionComponent,
+    SetsComponent,
+    DistributionsComponent,
   ],
   imports: [
     BrowserModule,

@@ -6,8 +6,8 @@
       </a>
     </div>
     <div class="header-nav">
-      <a href="#" class="nav-link" (click)="modal.open()"><span class="nav-text">New Set</span></a>
-      <a href="#" class="nav-link"><span class="nav-text">New Distribution</span></a>
+      <a href="/sets" class="nav-link" routerLinkActive="active"><span class="nav-text">Sets</span></a>
+      <a href="/distributions" class="nav-link" routerLinkActive="active"><span class="nav-text">Distributions</span></a>
     </div>
     <div class="header-actions">
       <a routerLink="/login" class="nav-link nav-icon">Login</a>
@@ -15,30 +15,9 @@
     </div>
   </header>
   <div class="content-container">
-    <nav class="sidenav">
-      <section class="sidenav-content">
-        <section class="nav-group collapsible">
-          <input id="upcoming-sets" type="checkbox">
-          <label for="upcoming-sets">Upcoming Sets</label>
-          <ul class="nav-list">
-            <li><a href="#" class="nav-link">set 1</a></li>
-            <li><a href="#" class="nav-link">set 2</a></li>
-          </ul>
-        </section>
-        <section class="nav-group collapsible">
-          <input id="completed-sets" type="checkbox">
-          <label for="completed-sets">Completed Sets</label>
-          <ul class="nav-list">
-            <li><a href="#" class="nav-link">set A</a></li>
-            <li><a href="#" class="nav-link">set B</a></li>
-          </ul>
-        </section> 
-      </section>
-    </nav>
     <div class="content-area">
         <router-outlet></router-outlet>
     </div>
   </div>
-  <new-tournament-modal></new-tournament-modal>
   <new-distribution-modal></new-distribution-modal>
 </div>

@@ -94,9 +94,8 @@ class DistributionPerPacket(models.Model):
 
 class Distribution(models.Model):
     name = models.CharField(max_length=100)
-    acf_tossup_per_period_count = models.PositiveIntegerField(default=20)
-    acf_bonus_per_period_count = models.PositiveIntegerField(default=20)
-    vhsl_bonus_per_period_count = models.PositiveIntegerField(default=0)
+    tossups_per_packet = models.PositiveIntegerField(default=20)
+    bonuses_per_packet = models.PositiveIntegerField(default=20)
 
     def __str__(self):
         return '{0!s}'.format(self.name)

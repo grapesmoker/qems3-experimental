@@ -1,5 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { Distribution } from '../../../types';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'new-distribution-modal',
@@ -10,10 +12,10 @@ export class NewDistributionComponent implements OnInit {
 
   show: boolean = false;
   name = new FormControl('', Validators.required);
-  tossupsPerPeriodCount = new FormControl('', Validators.required);
-  bonusesPerPeriodCount = new FormControl('', Validators.required);
+  tossupsPerPacket = new FormControl('20', [Validators.required, Validators.min(1), Validators.max(1000)]);
+  bonusesPerPacket = new FormControl('20', [Validators.required, Validators.min(0), Validators.max(1000)]);
 
-  @Output() onOk: EventEmitter<string> = new EventEmitter<string>();
+  @Output() onOk: EventEmitter<Distribution> = new EventEmitter<Distribution>();
 
   constructor() { }
 
@@ -32,6 +34,11 @@ export class NewDistributionComponent implements OnInit {
 
   onSubmit() {
     this.show = false;
-    this.onOk.emit("clicked submit");
+    var distribution: Distribution = {name: this.name.value, 
+      tossups_per_packet: this.tossupsPerPacket.value,
+      bonuses_per_packet: this.bonusesPerPacket.value}
+
+    this.onOk.emit(distribution);
+    //f(distribution);
   }
 }
