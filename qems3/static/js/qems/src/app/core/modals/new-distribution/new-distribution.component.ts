@@ -1,7 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Distribution } from '../../../types';
-import { of } from 'rxjs';
 
 @Component({
   selector: 'new-distribution-modal',
@@ -39,6 +38,5 @@ export class NewDistributionComponent implements OnInit {
       bonuses_per_packet: this.bonusesPerPacket.value}
 
     this.onOk.emit(distribution);
-    //f(distribution);
   }
 }

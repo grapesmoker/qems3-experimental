@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { NewDistributionComponent } from '../../modals/new-distribution/new-distribution.component';
 import { Distribution } from '../../../types';
-
+import { DistributionService } from '../../services/distribution.service'
 
 @Component({
   selector: 'app-distributions',
@@ -10,7 +10,9 @@ import { Distribution } from '../../../types';
 })
 export class DistributionsComponent implements AfterViewInit {
 
-  constructor() { }
+  constructor(
+    private distributionService: DistributionService
+  ) { }
 
   ngOnInit() {
   }
@@ -20,6 +22,9 @@ export class DistributionsComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.modal.onOk.subscribe(distribution => {
       console.log(distribution);
+      this.distributionService.postItem(distribution).subscribe(result => {
+        console.log(result);
+      });
     });
   }
 }

@@ -12,6 +12,13 @@ question_set_router = router.register(
     views.QuestionSetViewSet,
     base_name='question_sets')
 
+distribution_router = router.register(
+    r'api/distributions',
+    views.DistributionViewSet,
+    base_name='distributions'
+)
 
 
 urlpatterns = router.urls
+
+print(urlpatterns)

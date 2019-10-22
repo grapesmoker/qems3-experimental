@@ -36,8 +36,7 @@ class DistributionPerPacketSerializer(serializers.ModelSerializer):
 class DistributionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Distribution
-        fields = ['name', 'act_tossup_per_period_count', 'acf_bonus_per_period_count',
-                  'vhsl_bonus_per_period_count']
+        fields = ['name', 'tossups_per_packet', 'bonuses_per_packet']
 
 
 class CategoryEntrySerializer(serializers.ModelSerializer):

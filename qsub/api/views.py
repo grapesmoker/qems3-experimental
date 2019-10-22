@@ -12,9 +12,14 @@ from rest_framework import viewsets
 from rest_framework_extensions.mixins import NestedViewSetMixin
 from rest_framework.exceptions import ParseError
 
-from qsub.models import (Tossup, Bonus, QuestionSet, Packet, Distribution, DistributionEntry,
-                         DistributionPerPacket, TieBreakDistributionEntry)
-from qsub.api.serializers import (TossupSerializer, BonusSerializer, QuestionSetSerializer)
+from qsub.models import (
+    Tossup, Bonus, QuestionSet, Packet, Distribution, DistributionEntry, DistributionPerPacket,
+    TieBreakDistributionEntry
+)
+
+from qsub.api.serializers import (
+    TossupSerializer, BonusSerializer, QuestionSetSerializer, DistributionSerializer
+)
 
 
 class BaseNestedModelViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
@@ -48,4 +53,13 @@ class QuestionSetViewSet(BaseNestedModelViewSet):
     model = QuestionSet
     queryset = QuestionSet.objects.all()
     serializer_class = QuestionSetSerializer
+
+
+class DistributionViewSet(BaseNestedModelViewSet):
+
+    model = Distribution
+    queryset = Distribution.objects.all()
+    serializer_class = DistributionSerializer
+
+
 
