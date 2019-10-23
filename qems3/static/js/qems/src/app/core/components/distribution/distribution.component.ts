@@ -26,7 +26,6 @@ export class DistributionComponent implements OnInit {
   ) { }
 
   distribution: Distribution;
-  id: number = 1;
 
   ngOnInit() {
 
@@ -44,4 +43,14 @@ export class DistributionComponent implements OnInit {
     })
   }
 
+  save() {
+    console.log(this.distributionForm.value)
+    this.distributionService.putItem(this.distributionForm.value,
+      {id: this.distribution.id}).subscribe(response => {
+        console.log(response);
+      }
+      
+      )
+    
+  }
 }

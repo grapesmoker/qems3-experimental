@@ -18,6 +18,7 @@ export class QuestionSet {
 }
 
 export class Distribution {
+    id?: number;
     name: string;
     tossups_per_packet: number;
     bonuses_per_packet: number;
