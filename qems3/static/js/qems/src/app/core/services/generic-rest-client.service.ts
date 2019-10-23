@@ -18,7 +18,7 @@ export class GenericRestClientService<T> {
         actualUrl = actualUrl.replace(`:${key}`, `${value}`);
       }
     }
-    return BASE_URL + actualUrl.replace(/:[^\/]*\/?/g, '').replace(/\/$/, '') + '/';
+    return BASE_URL + actualUrl.replace(/:[^\/]*\/?/g, '');
   }
 
   get apiUrl(): string {

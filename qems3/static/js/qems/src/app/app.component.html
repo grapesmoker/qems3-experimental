@@ -6,8 +6,8 @@
       </a>
     </div>
     <div class="header-nav">
-      <a href="/sets" class="nav-link" routerLinkActive="active"><span class="nav-text">Sets</span></a>
-      <a href="/distributions" class="nav-link" routerLinkActive="active"><span class="nav-text">Distributions</span></a>
+      <a routerLink="/sets" class="nav-link" routerLinkActive="active"><span class="nav-text">Sets</span></a>
+      <a routerLink="/distributions" class="nav-link" routerLinkActive="active"><span class="nav-text">Distributions</span></a>
     </div>
     <div class="header-actions">
       <a routerLink="/login" class="nav-link nav-icon">Login</a>
@@ -19,5 +19,4 @@
         <router-outlet></router-outlet>
     </div>
   </div>
-  <new-distribution-modal></new-distribution-modal>
 </div>

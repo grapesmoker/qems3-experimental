@@ -36,7 +36,7 @@ class DistributionPerPacketSerializer(serializers.ModelSerializer):
 class DistributionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Distribution
-        fields = ['name', 'tossups_per_packet', 'bonuses_per_packet']
+        fields = ['id', 'name', 'tossups_per_packet', 'bonuses_per_packet']
 
 
 class CategoryEntrySerializer(serializers.ModelSerializer):

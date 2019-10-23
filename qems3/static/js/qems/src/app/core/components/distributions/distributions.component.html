@@ -7,8 +7,11 @@
       <input id="distributions" type="checkbox">
       <label for="distributions">Distributions</label>
       <ul class="nav-list">
-        <li><a href="#" class="nav-link">dist 1</a></li>
-        <li><a href="#" class="nav-link">dist 2</a></li>
+        <li *ngFor="let dist of distributions">
+          <a [routerLink]="['/distributions' , dist.id]" class="nav-link" routerLinkActive="active">
+            {{ dist.name }}
+          </a>
+        </li>
       </ul>
     </section>
   </section>

@@ -18,6 +18,7 @@ import { NewTournamentComponent } from './core/modals/new-tournament/new-tournam
 import { NewDistributionComponent } from './core/modals/new-distribution/new-distribution.component';
 import { SetsComponent } from './core/components/sets/sets.component';
 import { DistributionsComponent } from './core/components/distributions/distributions.component';
+import { DistributionComponent } from './core/components/distribution/distribution.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { DistributionsComponent } from './core/components/distributions/distribu
     NewDistributionComponent,
     SetsComponent,
     DistributionsComponent,
+    DistributionComponent,
   ],
   imports: [
     BrowserModule,

@@ -14,7 +14,14 @@ export class DistributionsComponent implements AfterViewInit {
     private distributionService: DistributionService
   ) { }
 
+  distributions: Distribution[];
+  selectedDist: Distribution;
+
   ngOnInit() {
+    this.distributionService.getItems().subscribe(distributions => {
+      this.distributions = distributions;
+      console.log(this.distributions);
+    })
   }
 
   @ViewChild(NewDistributionComponent) modal: NewDistributionComponent;

@@ -1,0 +1,15 @@
+<form clrForm [formGroup]="distributionForm">
+  <clr-input-container>
+    <label>Name</label>
+    <input clrInput type="text" formControlName="name" />
+  </clr-input-container>
+  <clr-input-container>
+    <label>Tossups per packet</label>
+    <input clrInput type="text" formControlName="tossups_per_packet" />
+  </clr-input-container>
+  <clr-input-container>
+    <label>Bonuses per packet</label>
+    <input clrInput type="text" formControlName="bonuses_per_packet" />
+  </clr-input-container>
+  <button class="btn btn-primary" type="submit" (click)="save()">Save</button>
+</form>

@@ -9,7 +9,7 @@ import { HttpClient } from '@angular/common/http';
 export class DistributionService extends GenericRestClientService<Distribution> {
 
   constructor(httpClient: HttpClient) { 
-    super(httpClient, '/qsub/api/distributions/')
+    super(httpClient, '/qsub/api/distributions/:id')
   }
 
 }
