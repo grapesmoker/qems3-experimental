@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter } from '@angular/core';
 import { DistributionService } from '../../services/distribution.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
@@ -13,6 +13,8 @@ import { FormGroup, FormControl } from '@angular/forms';
   styleUrls: ['./distribution.component.sass']
 })
 export class DistributionComponent implements OnInit {
+
+  onUpdate: EventEmitter<Distribution> = new EventEmitter();
 
   distributionForm = new FormGroup({
     name: new FormControl(''),
@@ -29,10 +31,6 @@ export class DistributionComponent implements OnInit {
 
   ngOnInit() {
 
-    // this.distributionService.getItem({'id': this.id})
-    //   .subscribe(distribution => {
-    //     this.distribution = distribution;
-    //   }) 
     this.route.paramMap.subscribe(paramMap => {
       this.distributionService.getItem({id: paramMap.get('id')})
       .subscribe(distribution => {
@@ -47,7 +45,7 @@ export class DistributionComponent implements OnInit {
     console.log(this.distributionForm.value)
     this.distributionService.putItem(this.distributionForm.value,
       {id: this.distribution.id}).subscribe(response => {
-        console.log(response);
+        this.onUpdate.emit(response);
       }
       
       )

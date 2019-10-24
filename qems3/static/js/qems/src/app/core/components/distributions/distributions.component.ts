@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { NewDistributionComponent } from '../../modals/new-distribution/new-distribution.component';
 import { Distribution } from '../../../types';
 import { DistributionService } from '../../services/distribution.service'
+import { DistributionComponent } from '../distribution/distribution.component';
 
 @Component({
   selector: 'app-distributions',
@@ -18,13 +19,12 @@ export class DistributionsComponent implements AfterViewInit {
   selectedDist: Distribution;
 
   ngOnInit() {
-    this.distributionService.getItems().subscribe(distributions => {
-      this.distributions = distributions;
-      console.log(this.distributions);
-    })
+    this.getDistributions();
   }
 
-  @ViewChild(NewDistributionComponent) modal: NewDistributionComponent;
+  @ViewChild(NewDistributionComponent, {static: false}) modal: NewDistributionComponent;
+  //@ViewChild(Distribution) dist: DistributionComponent;
+
 
   ngAfterViewInit(): void {
     this.modal.onOk.subscribe(distribution => {
@@ -33,5 +33,16 @@ export class DistributionsComponent implements AfterViewInit {
         console.log(result);
       });
     });
+
+    // this.dist.onUpdate.subscribe(Distribution => {
+    //   this.getDistributions()
+    // })
+  }
+
+  getDistributions() {
+    this.distributionService.getItems().subscribe(distributions => {
+      this.distributions = distributions;
+      console.log(this.distributions);
+    })
   }
 }

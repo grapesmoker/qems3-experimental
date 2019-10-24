@@ -15,7 +15,7 @@ export class SetsComponent implements AfterViewInit {
   ngOnInit() {
   }
 
-  @ViewChild(NewTournamentComponent) modal: NewTournamentComponent;
+  @ViewChild(NewTournamentComponent, {static: false}) modal: NewTournamentComponent;
 
   ngAfterViewInit(): void {
     this.modal.onOk.subscribe(questionSet => {
