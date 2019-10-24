@@ -13,8 +13,13 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegistrationComponent },
   { path: 'sets', component: SetsComponent },
-  { path: 'distributions', component: DistributionsComponent },
-  { path: 'distributions/:id', component: DistributionComponent }
+  {
+    path: 'distributions', 
+    //component: DistributionsComponent,
+    loadChildren: () => import('./core/components/distributions/distributions.module')
+      .then(m => m.DistributionsModule)
+  },
+  //{ path: 'distributions/:id', component: DistributionComponent }
 ]
 
 @NgModule({

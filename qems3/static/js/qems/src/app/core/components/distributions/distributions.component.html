@@ -1,19 +1,24 @@
-<nav class="sidenav">
-  <section class="sidenav-content">
-    <a class="nav-link" (click)="modal.open()">
-      <clr-icon shape="plus-circle"></clr-icon> New Distribution
-    </a>
-    <section class="nav-group collapsible">
-      <input id="distributions" type="checkbox">
-      <label for="distributions">Distributions</label>
-      <ul class="nav-list">
-        <li *ngFor="let dist of distributions">
-          <a [routerLink]="['/distributions' , dist.id]" class="nav-link" routerLinkActive="active">
-            {{ dist.name }}
-          </a>
-        </li>
-      </ul>
+<div class="content-container">
+  <div class="content-area">
+    <router-outlet></router-outlet>
+  </div>
+  <nav class="sidenav">
+    <section class="sidenav-content">
+      <a class="nav-link" (click)="modal.open()">
+        <clr-icon shape="plus-circle"></clr-icon> New Distribution
+      </a>
+      <section class="nav-group collapsible">
+        <input id="distributions" type="checkbox">
+        <label for="distributions">Distributions</label>
+        <ul class="nav-list">
+          <li *ngFor="let dist of distributions">
+            <a routerLink="{{ dist.id }}" class="nav-link" routerLinkActive="active">
+              {{ dist.name }}
+            </a>
+          </li>
+        </ul>
+      </section>
     </section>
-  </section>
-</nav>
+  </nav>
+</div>
 <new-distribution-modal></new-distribution-modal>

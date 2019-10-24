@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { DistributionsModule } from './core/components/distributions/distributions.module';
 
 import { GenericRestClientService } from './core/services/generic-rest-client.service';
 import { AppComponent } from './app.component';
@@ -26,10 +27,8 @@ import { DistributionComponent } from './core/components/distribution/distributi
     LoginComponent,
     RegistrationComponent,
     NewTournamentComponent,
-    NewDistributionComponent,
+    //NewDistributionComponent,
     SetsComponent,
-    DistributionsComponent,
-    DistributionComponent,
   ],
   imports: [
     BrowserModule,
@@ -48,7 +47,8 @@ import { DistributionComponent } from './core/components/distribution/distributi
     MatIconModule, 
     MatListModule,
     MatCardModule,
-    ClarityModule
+    ClarityModule,
+    DistributionsModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
