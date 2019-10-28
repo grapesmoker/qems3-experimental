@@ -11,7 +11,7 @@
         <input id="distributions" type="checkbox">
         <label for="distributions">Distributions</label>
         <ul class="nav-list">
-          <li *ngFor="let dist of distributions">
+          <li *ngFor="let dist of (distributions | async)">
             <a routerLink="{{ dist.id }}" class="nav-link" routerLinkActive="active">
               {{ dist.name }}
             </a>

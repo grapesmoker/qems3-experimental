@@ -2,10 +2,11 @@ import { Component, OnInit, EventEmitter } from '@angular/core';
 import { DistributionService } from '../../services/distribution.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
-import { Distribution } from 'src/app/types';
+import { Distribution, State } from 'src/app/types';
 import { Observable } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
-
+import { Store } from '@ngrx/store';
+import { saveDistribution } from '../distributions/distributions.actions';
 
 @Component({
   selector: 'app-distribution',
@@ -24,7 +25,8 @@ export class DistributionComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private distributionService: DistributionService
+    private distributionService: DistributionService,
+    private store: Store<State>
   ) { }
 
   distribution: Distribution;
@@ -44,11 +46,9 @@ export class DistributionComponent implements OnInit {
   save() {
     console.log(this.distributionForm.value)
     this.distributionService.putItem(this.distributionForm.value,
-      {id: this.distribution.id}).subscribe(response => {
-        this.onUpdate.emit(response);
-      }
-      
-      )
-    
+      {
+        id: this.distribution.id}).subscribe(response => {
+        this.store.dispatch(saveDistribution({dist: response}))
+      })
   }
 }

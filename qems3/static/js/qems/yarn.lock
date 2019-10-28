@@ -882,6 +882,16 @@
   resolved "https://registry.yarnpkg.com/@clr/ui/-/ui-2.3.0.tgz#d80bbe79c49e8766d9f35099bbb1da71db6b3b38"
   integrity sha512-8KxMmvI0uaRL52sEU+qTZNiJ03UQQSbjQ6QysitibY2ScVbweVxUgjAXRD6xAUzA5so6FcyKrS/7G+d3vEcyvA==
 
+"@ngrx/effects@^8.4.0":
+  version "8.4.0"
+  resolved "https://registry.yarnpkg.com/@ngrx/effects/-/effects-8.4.0.tgz#1904795c344e24682983cd3e65a636c43f8aba60"
+  integrity sha512-LQv+NIYkFehXMSBMT9xL04RvmDmbzSbCbSCXbNSH2hN216TqX83L29u5T4I06oGhzQ3xN+SSQXGWQiZYJvKuEA==
+
+"@ngrx/store-devtools@^8.4.0":
+  version "8.4.0"
+  resolved "https://registry.yarnpkg.com/@ngrx/store-devtools/-/store-devtools-8.4.0.tgz#6f79680331072d450498912988df7a44c12b6ddb"
+  integrity sha512-622z0CNdmfmPy17LFcewf/7xU2quhun+G+D7FdF58DlwZDFPJp0UotER1HW+ApGmI8h6hjeQs/7flzX0H12sIg==
+
 "@ngrx/store@^8.4.0":
   version "8.4.0"
   resolved "https://registry.yarnpkg.com/@ngrx/store/-/store-8.4.0.tgz#b4ab3bf81c6ab7bc0904886aa2b40be98fae8db5"

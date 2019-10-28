@@ -6,6 +6,12 @@ import { DistributionsRoutingModule } from './distributions.routing';
 import { DistributionsComponent } from './distributions.component';
 import { DistributionComponent } from '../distribution/distribution.component';
 import { NewDistributionComponent } from '../../../core/modals/new-distribution/new-distribution.component';
+import { StoreModule } from '@ngrx/store';
+import { State } from 'src/app/types';
+import { distributionReducer } from '../distribution/distribution.reducer'
+import { distributionsReducer } from './distributions.reducer'
+import { EffectsModule } from '@ngrx/effects';
+import { DistributionsEffects } from './distributions.effects';
 
 @NgModule({
     imports: [
@@ -14,6 +20,8 @@ import { NewDistributionComponent } from '../../../core/modals/new-distribution/
         CommonModule,
         DistributionsRoutingModule,
         ClarityModule,
+        StoreModule.forFeature('distributions', distributionsReducer),
+        EffectsModule.forFeature([DistributionsEffects])
     ],
     declarations: [
         

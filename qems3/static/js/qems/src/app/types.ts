@@ -1,4 +1,4 @@
-export class User {
+export interface User {
     id: number;
     username: string;
     first_name?: string;
@@ -6,7 +6,7 @@ export class User {
     email: string;
 }
 
-export class QuestionSet {
+export interface QuestionSet {
     id: number;
     name: string;
     date: Date;
@@ -22,4 +22,9 @@ export class Distribution {
     name: string;
     tossups_per_packet: number;
     bonuses_per_packet: number;
+}
+
+export interface State {
+    user?: User;
+    distributions: Distribution[]
 }

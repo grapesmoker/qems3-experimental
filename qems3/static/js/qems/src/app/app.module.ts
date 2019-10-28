@@ -20,6 +20,11 @@ import { NewDistributionComponent } from './core/modals/new-distribution/new-dis
 import { SetsComponent } from './core/components/sets/sets.component';
 import { DistributionsComponent } from './core/components/distributions/distributions.component';
 import { DistributionComponent } from './core/components/distribution/distribution.component';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
+
 
 @NgModule({
   declarations: [
@@ -48,7 +53,13 @@ import { DistributionComponent } from './core/components/distribution/distributi
     MatListModule,
     MatCardModule,
     ClarityModule,
-    DistributionsModule
+    DistributionsModule,
+    StoreModule.forRoot({}),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25, // Retains last 25 states
+      logOnly: environment.production, // Restrict extension to log-only mode
+    }),
+    EffectsModule.forRoot([])
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
