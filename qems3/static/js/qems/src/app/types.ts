@@ -1,3 +1,6 @@
+import { createEntityAdapter, EntityState, EntityAdapter } from '@ngrx/entity';
+
+
 export interface User {
     id: number;
     username: string;
@@ -24,7 +27,7 @@ export class Distribution {
     bonuses_per_packet: number;
 }
 
-export interface State {
+export interface QemsState {
     user?: User;
     distributions: Distribution[]
 }

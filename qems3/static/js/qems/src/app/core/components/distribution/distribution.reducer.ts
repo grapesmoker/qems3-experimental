@@ -1,9 +1,9 @@
 import { createReducer, on } from '@ngrx/store';
 import { saveDistribution } from './distribution.actions';
-import { State, Distribution } from 'src/app/types';
+import { QemsState, Distribution } from 'src/app/types';
 
 
-export const initialState: State = {
+export const initialState: QemsState = {
     distributions: []
 };
 

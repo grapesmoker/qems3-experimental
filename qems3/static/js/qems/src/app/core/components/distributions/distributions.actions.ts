@@ -1,5 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { Distribution } from 'src/app/types';
+import { Update } from '@ngrx/entity';
 
 
 export const getDistributions = createAction(
@@ -11,7 +12,7 @@ export const getDistributionsSuccess = createAction(
     props<{dists: Distribution[]}>()
 );
 
-export const saveDistribution = createAction(
+export const updateDistribution = createAction(
     '[Distribution Page] Save',
-    props<{dist: Distribution}>()
+    props<{dist: Update<Distribution>}>()
 );

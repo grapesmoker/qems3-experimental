@@ -7,7 +7,7 @@ import { DistributionsComponent } from './distributions.component';
 import { DistributionComponent } from '../distribution/distribution.component';
 import { NewDistributionComponent } from '../../../core/modals/new-distribution/new-distribution.component';
 import { StoreModule } from '@ngrx/store';
-import { State } from 'src/app/types';
+import { QemsState } from 'src/app/types';
 import { distributionReducer } from '../distribution/distribution.reducer'
 import { distributionsReducer } from './distributions.reducer'
 import { EffectsModule } from '@ngrx/effects';

@@ -887,6 +887,11 @@
   resolved "https://registry.yarnpkg.com/@ngrx/effects/-/effects-8.4.0.tgz#1904795c344e24682983cd3e65a636c43f8aba60"
   integrity sha512-LQv+NIYkFehXMSBMT9xL04RvmDmbzSbCbSCXbNSH2hN216TqX83L29u5T4I06oGhzQ3xN+SSQXGWQiZYJvKuEA==
 
+"@ngrx/entity@^8.4.0":
+  version "8.4.0"
+  resolved "https://registry.yarnpkg.com/@ngrx/entity/-/entity-8.4.0.tgz#4d14aaabe722d840da7e4f03b03eaa6c483fbadc"
+  integrity sha512-oJYBW9w0YXODeGpp03bvnAShHbwF+44OyPd1zURnYDtpd1r6W8qWIDr77aYViic5YTzISURiZ9rxE2n8pkNvqw==
+
 "@ngrx/store-devtools@^8.4.0":
   version "8.4.0"
   resolved "https://registry.yarnpkg.com/@ngrx/store-devtools/-/store-devtools-8.4.0.tgz#6f79680331072d450498912988df7a44c12b6ddb"

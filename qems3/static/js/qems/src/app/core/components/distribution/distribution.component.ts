@@ -2,11 +2,12 @@ import { Component, OnInit, EventEmitter } from '@angular/core';
 import { DistributionService } from '../../services/distribution.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
-import { Distribution, State } from 'src/app/types';
+import { Distribution, QemsState } from 'src/app/types';
 import { Observable } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { saveDistribution } from '../distributions/distributions.actions';
+import { updateDistribution } from '../distributions/distributions.actions';
+import { Update } from '@ngrx/entity';
 
 @Component({
   selector: 'app-distribution',
@@ -26,7 +27,7 @@ export class DistributionComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private distributionService: DistributionService,
-    private store: Store<State>
+    private store: Store<QemsState>
   ) { }
 
   distribution: Distribution;
@@ -48,7 +49,15 @@ export class DistributionComponent implements OnInit {
     this.distributionService.putItem(this.distributionForm.value,
       {
         id: this.distribution.id}).subscribe(response => {
-        this.store.dispatch(saveDistribution({dist: response}))
+          const distUpdate: Update<Distribution> = {
+            id: response.id,
+            changes: {
+              name: response.name,
+              tossups_per_packet: response.tossups_per_packet,
+              bonuses_per_packet: response.bonuses_per_packet
+            }
+          }
+        this.store.dispatch(updateDistribution({dist: distUpdate}))
       })
   }
 }
