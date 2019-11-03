@@ -5,8 +5,8 @@ import { DistributionService } from '../../services/distribution.service'
 import { DistributionComponent } from '../distribution/distribution.component';
 import { Observable } from 'rxjs';
 import { Store, select } from '@ngrx/store';
-import { updateDistribution, getDistributions } from './distributions.actions';
-import { selectDistributions } from './distributions.selectors';
+import { updateDistribution, getDistributions } from './store/actions/distributions.actions';
+import { selectDistributions } from './store/selectors/distributions.selectors';
 import { EntityState } from '@ngrx/entity';
 
 
@@ -24,7 +24,7 @@ export class DistributionsComponent implements AfterViewInit {
     this.distributions = this.store.pipe(select(selectDistributions))
   }
 
-  distributions: Observable<EntityState<Distribution[]>>;
+  distributions: Observable<Distribution[]>;
   selectedDist: Distribution;
 
   ngOnInit() {

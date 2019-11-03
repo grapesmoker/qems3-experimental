@@ -101,6 +101,15 @@ class Distribution(models.Model):
         return '{0!s}'.format(self.name)
 
 
+class Category(models.Model):
+
+    name = models.CharField(max_length=255)
+    parent_category = models.ForeignKey('Category', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'<Category: {self.name}>'
+
+
 # This class corresponds to a distribution and appears in multiple sets
 # Contains no set-specific information, but does contain info on absolute
 # number of tossups (rather than percentages)
@@ -110,12 +119,7 @@ class CategoryEntry(models.Model):
         verbose_name_plural = 'category entries'
 
     distribution = models.ForeignKey(Distribution, on_delete=models.CASCADE)
-    category_name = models.CharField(max_length=200)
-    sub_category_name = models.CharField(max_length=200, null=True)
-    sub_sub_category_name = models.CharField(max_length=200, null=True)
-    category_type = models.CharField(max_length=200, choices=(('Category', 'Category'),
-                                                              ('SubCategory', 'Subcategory'),
-                                                              ('SubSubCategory', 'SubSubCategory')))
+    category_name = models.ForeignKey(Category, on_delete=models.CASCADE)
 
     # Min/max questions of this type for one period
     # i.e. 2.2, which means between 2 and 3 weighted towards 2
@@ -143,15 +147,12 @@ class DistributionEntry(models.Model):
         verbose_name_plural = 'distribution entries'
 
     distribution = models.ForeignKey(Distribution, on_delete=models.CASCADE)
-    category = models.TextField()
-    subcategory = models.TextField()
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+
     min_tossups = models.PositiveIntegerField(null=True)
     min_bonuses = models.PositiveIntegerField(null=True)
     max_tossups = models.PositiveIntegerField(null=True)
     max_bonuses = models.PositiveIntegerField(null=True)
-
-    # fin_tossups = models.CharField(max_length=500, null=True)
-    # fin_bonuses = models.CharField(max_length=500, null=True)
 
     def __str__(self):
         return '{0!s} - {1!s}'.format(self.category, self.subcategory)

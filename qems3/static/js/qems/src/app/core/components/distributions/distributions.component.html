@@ -16,7 +16,7 @@
           </li>
           <li *ngFor="let dist of (distributions | async)">
             <a routerLink="{{ dist.id }}" class="nav-link" routerLinkActive="active">
-                <clr-icon shape="file"></clr-icon> {{ dist.name }}
+              <clr-icon shape="file"></clr-icon> {{ dist.name }}
             </a>
           </li>
         </ul>

@@ -6,7 +6,7 @@ import { Distribution, QemsState } from 'src/app/types';
 import { Observable } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { updateDistribution } from '../distributions/distributions.actions';
+import { updateDistribution } from '../distributions/store/actions/distributions.actions';
 import { Update } from '@ngrx/entity';
 
 @Component({
