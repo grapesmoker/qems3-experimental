@@ -1,0 +1,27 @@
+<div class="content-container">
+    <div class="content-area">
+        <router-outlet></router-outlet>
+    </div>
+    <nav class="sidenav">
+        <section class="sidenav-content">
+        
+        <section class="nav-group collapsible">
+            <input id="categories" type="checkbox">
+            <label for="categories">Categories</label>
+            <ul class="nav-list">
+            <li>
+                <a class="nav-link" (click)="modal.open()">
+                <clr-icon shape="plus-circle"></clr-icon> New Category
+                </a>
+            </li>
+            <li *ngFor="let cat of (categories | async)">
+                <a routerLink="{{ cat.id }}" class="nav-link" routerLinkActive="active">
+                <clr-icon shape="file"></clr-icon> {{ cat.name }}
+                </a>
+            </li>
+            </ul>
+        </section>
+        </section>
+    </nav>
+    </div>
+<new-category-modal></new-category-modal>

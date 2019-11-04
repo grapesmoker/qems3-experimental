@@ -65,7 +65,7 @@ class Role(models.Model):
 
     writer = models.ForeignKey(Writer, on_delete=models.CASCADE)
     question_set = models.ForeignKey(QuestionSet, on_delete=models.CASCADE)
-    category = models.CharField(max_length=500)
+    category = models.ForeignKey('Category', on_delete=models.CASCADE)
     can_view_others = models.BooleanField(null=False, default=False)
     can_edit_others = models.BooleanField(null=False, default=False)
 
@@ -103,8 +103,10 @@ class Distribution(models.Model):
 
 class Category(models.Model):
 
-    name = models.CharField(max_length=255)
-    parent_category = models.ForeignKey('Category', on_delete=models.CASCADE)
+    name = models.CharField(max_length=1000)
+    parent_category = models.ForeignKey('Category', on_delete=models.CASCADE, null=True)
+    description = models.TextField(null=True, blank=True)
+    path = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return f'<Category: {self.name}>'
@@ -125,7 +127,6 @@ class CategoryEntry(models.Model):
     # i.e. 2.2, which means between 2 and 3 weighted towards 2
     acf_tossup_fraction = models.DecimalField(null=True, max_digits=5, decimal_places=1)
     acf_bonus_fraction = models.DecimalField(null=True, max_digits=5, decimal_places=1)
-    vhsl_bonus_fraction = models.DecimalField(null=True, max_digits=5, decimal_places=1)
 
     # Min/max questions of all types in one period for this category
     min_total_questions_in_period = models.PositiveIntegerField(null=True)

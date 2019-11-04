@@ -1,0 +1,23 @@
+<clr-modal [(clrModalOpen)]="show">
+    <h3 class="modal-title">New Category</h3>
+    <div class="modal-body">
+        <form clrForm>
+        <clr-input-container>
+            <label>Name</label>
+            <input clrInput type="text" [formControl]="name">
+        </clr-input-container>
+        <clr-input-container>
+            <label>Description</label>
+            <input clrInput type="number" [formControl]="description">
+        </clr-input-container>
+        <clr-input-container>
+            <label>Parent Category</label>
+            <input clrInput type="number" [formControl]="parentCategory">
+        </clr-input-container>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline" (click)="onCancel()">Cancel</button>
+        <button type="submit" class="btn btn-primary" (click)="onSubmit()">Ok</button>
+    </div>
+</clr-modal>

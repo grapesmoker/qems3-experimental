@@ -1,0 +1,15 @@
+<form clrForm [formGroup]="categoryForm">
+    <clr-input-container>
+        <label>Name</label>
+        <input clrInput type="text" formControlName="name" />
+    </clr-input-container>
+    <clr-input-container>
+        <label>Parent Category</label>
+        <input clrInput type="text" formControlName="parent_category" />
+    </clr-input-container>
+    <clr-input-container>
+        <label>Description</label>
+        <input clrInput type="text" formControlName="description" />
+    </clr-input-container>
+    <button class="btn btn-primary" type="submit" (click)="save()">Save</button>
+</form>

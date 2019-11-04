@@ -3,8 +3,8 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { DistributionsModule } from './core/components/distributions/distributions.module';
+import { CategoriesModule } from './core/components/categories/categories.module';
 
-import { GenericRestClientService } from './core/services/generic-rest-client.service';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { RegistrationComponent } from './registration/registration.component';
@@ -16,15 +16,11 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { ClarityModule } from '@clr/angular';
 import { AuthInterceptor } from './core/interceptors/auth-interceptor';
 import { NewTournamentComponent } from './core/modals/new-tournament/new-tournament.component';
-import { NewDistributionComponent } from './core/modals/new-distribution/new-distribution.component';
 import { SetsComponent } from './core/components/sets/sets.component';
-import { DistributionsComponent } from './core/components/distributions/distributions.component';
-import { DistributionComponent } from './core/components/distribution/distribution.component';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
-
 
 @NgModule({
   declarations: [
@@ -32,7 +28,6 @@ import { environment } from '../environments/environment';
     LoginComponent,
     RegistrationComponent,
     NewTournamentComponent,
-    //NewDistributionComponent,
     SetsComponent,
   ],
   imports: [
@@ -54,6 +49,7 @@ import { environment } from '../environments/environment';
     MatCardModule,
     ClarityModule,
     DistributionsModule,
+    CategoriesModule,
     StoreModule.forRoot({}),
     StoreDevtoolsModule.instrument({
       maxAge: 25, // Retains last 25 states

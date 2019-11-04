@@ -3,7 +3,7 @@ from rest_framework import serializers
 from qsub.models import (Tossup, Bonus, Packet, Distribution, DistributionEntry, DistributionPerPacket,
                          SetWideDistributionEntry, TieBreakDistributionEntry, QuestionSet,
                          QuestionType, QuestionFieldHistory, QuestionHistory, Writer, WriterQuestionSetSettings,
-                         PerCategoryWriterSettings, CategoryEntry)
+                         PerCategoryWriterSettings, CategoryEntry, Category)
 
 
 class WriterSerializer(serializers.ModelSerializer):
@@ -37,6 +37,12 @@ class DistributionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Distribution
         fields = ['id', 'name', 'tossups_per_packet', 'bonuses_per_packet']
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['id', 'parent_category']
 
 
 class CategoryEntrySerializer(serializers.ModelSerializer):

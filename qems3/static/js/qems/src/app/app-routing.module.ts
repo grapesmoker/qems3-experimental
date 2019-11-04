@@ -15,11 +15,14 @@ const routes: Routes = [
   { path: 'sets', component: SetsComponent },
   {
     path: 'distributions', 
-    //component: DistributionsComponent,
     loadChildren: () => import('./core/components/distributions/distributions.module')
       .then(m => m.DistributionsModule)
   },
-  //{ path: 'distributions/:id', component: DistributionComponent }
+  {
+    path: 'categories', 
+    loadChildren: () => import('./core/components/categories/categories.module')
+      .then(m => m.CategoriesModule)
+  }
 ]
 
 @NgModule({
