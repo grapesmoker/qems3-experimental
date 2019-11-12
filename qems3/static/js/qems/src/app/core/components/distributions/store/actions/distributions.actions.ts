@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Distribution } from 'src/app/types';
+import { Distribution } from '../../../../types/models';
 import { Update } from '@ngrx/entity';
 
 

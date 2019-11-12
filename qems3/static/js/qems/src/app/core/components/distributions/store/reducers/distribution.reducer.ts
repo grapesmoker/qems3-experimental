@@ -1,10 +1,11 @@
 import { createReducer, on } from '@ngrx/store';
 import { saveDistribution } from '../../../distribution/distribution.actions';
-import { QemsState, Distribution } from 'src/app/types';
+import { QemsState, Distribution } from '../../../../types/models';
 
 
 export const initialState: QemsState = {
-    distributions: []
+    distributions: [],
+    categories: []
 };
 
 const _distributionReducer = createReducer(

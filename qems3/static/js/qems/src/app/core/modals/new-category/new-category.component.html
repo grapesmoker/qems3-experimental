@@ -1,19 +1,23 @@
 <clr-modal [(clrModalOpen)]="show">
     <h3 class="modal-title">New Category</h3>
     <div class="modal-body">
-        <form clrForm>
+        <form clrForm [formGroup]="categoryForm">
         <clr-input-container>
             <label>Name</label>
-            <input clrInput type="text" [formControl]="name">
+            <input clrInput type="text" formControlName="name">
         </clr-input-container>
         <clr-input-container>
             <label>Description</label>
-            <input clrInput type="number" [formControl]="description">
+            <input clrInput type="textarea" formControlName="description">
         </clr-input-container>
-        <clr-input-container>
+        <clr-select-container>
             <label>Parent Category</label>
-            <input clrInput type="number" [formControl]="parentCategory">
-        </clr-input-container>
+            <select clrSelect formControlName="parentCategory">
+                <option *ngFor="let category of (categories$ | async)" [value]="category.id">
+                    {{ category.name }}
+                </option>
+            </select>
+        </clr-select-container>
         </form>
     </div>
     <div class="modal-footer">

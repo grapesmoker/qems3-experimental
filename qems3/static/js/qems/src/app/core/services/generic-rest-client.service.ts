@@ -41,6 +41,7 @@ export class GenericRestClientService<T> {
     urlParams: { [key: string]: string | number } = {},
     httpOptions?: { [key: string]: any }
   ): Observable<T[]> {
+    console.log(this.convertUrlParams(urlParams))
     return this.httpClient.get<T[]>(
       this.convertUrlParams(urlParams),
       httpOptions

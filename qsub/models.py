@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.contrib import messages
 
@@ -104,12 +104,20 @@ class Distribution(models.Model):
 class Category(models.Model):
 
     name = models.CharField(max_length=1000)
-    parent_category = models.ForeignKey('Category', on_delete=models.CASCADE, null=True)
+    parent_category = models.ForeignKey('Category', on_delete=models.CASCADE, null=True, related_name='subcategories')
     description = models.TextField(null=True, blank=True)
     path = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return f'<Category: {self.name}>'
+
+
+@receiver(post_save, sender=Category)
+def set_category_path(sender, instance, **kwargs):
+
+    parent = instance.parent_category
+    if parent:
+        sender.objects.filter(id=instance.id).update(path=f'{parent.path}/{instance.id}')
 
 
 # This class corresponds to a distribution and appears in multiple sets

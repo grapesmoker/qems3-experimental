@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework_recursive.fields import RecursiveField
 
 from qsub.models import (Tossup, Bonus, Packet, Distribution, DistributionEntry, DistributionPerPacket,
                          SetWideDistributionEntry, TieBreakDistributionEntry, QuestionSet,
@@ -42,7 +43,12 @@ class DistributionSerializer(serializers.ModelSerializer):
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['id', 'parent_category']
+        fields = ['id', 'name', 'description', 'parent_category', 'path', 'subcategories']
+
+    def get_fields(self):
+        fields = super().get_fields()
+        fields['subcategories'] = CategorySerializer(many=True)
+        return fields
 
 
 class CategoryEntrySerializer(serializers.ModelSerializer):

@@ -18,6 +18,11 @@ distribution_router = router.register(
     base_name='distributions'
 )
 
+categories_router = router.register(
+    r'api/categories',
+    views.CategoryViewSet,
+    base_name='categories'
+)
 
 urlpatterns = router.urls
 

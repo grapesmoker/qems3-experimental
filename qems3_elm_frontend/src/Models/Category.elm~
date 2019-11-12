@@ -1,0 +1,16 @@
+module Models.Category exposing (Category, CategoryId, categoryDecoder, categoriesDecoder)
+
+import Json.Decode as Decode exposing (Decoder, int, list, string)
+import Json.Decode.Pipeline exposing (required)
+
+
+type CategoryId
+    = CategoryId Int
+      
+
+type alias Category =
+    { id : CategoryId
+    , name : String
+    , description : String
+    , parentCategory : CategoryId
+    }

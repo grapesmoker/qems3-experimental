@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { GenericRestClientService } from './generic-rest-client.service'
-import { Distribution } from 'src/app/types';
+import { Distribution } from '../types/models';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({

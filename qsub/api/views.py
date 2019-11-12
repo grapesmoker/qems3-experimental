@@ -2,6 +2,8 @@ import json
 import os
 
 from django.conf import settings
+from django.db.models import Q
+from django.db.models.signals import post_save
 
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication, BasicAuthentication
 from rest_framework.parsers import JSONParser
@@ -14,11 +16,11 @@ from rest_framework.exceptions import ParseError
 
 from qsub.models import (
     Tossup, Bonus, QuestionSet, Packet, Distribution, DistributionEntry, DistributionPerPacket,
-    TieBreakDistributionEntry
+    TieBreakDistributionEntry, Category
 )
 
 from qsub.api.serializers import (
-    TossupSerializer, BonusSerializer, QuestionSetSerializer, DistributionSerializer
+    TossupSerializer, BonusSerializer, QuestionSetSerializer, DistributionSerializer, CategorySerializer
 )
 
 
@@ -61,5 +63,11 @@ class DistributionViewSet(BaseNestedModelViewSet):
     queryset = Distribution.objects.all()
     serializer_class = DistributionSerializer
 
+
+class CategoryViewSet(BaseNestedModelViewSet):
+
+    model = Category
+    queryset = Category.objects.filter(parent_category__isnull=True)
+    serializer_class = CategorySerializer
 
 

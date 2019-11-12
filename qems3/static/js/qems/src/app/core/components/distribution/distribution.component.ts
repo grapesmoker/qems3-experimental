@@ -1,9 +1,7 @@
 import { Component, OnInit, EventEmitter } from '@angular/core';
 import { DistributionService } from '../../services/distribution.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { switchMap } from 'rxjs/operators';
-import { Distribution, QemsState } from 'src/app/types';
-import { Observable } from 'rxjs';
+import { Distribution, QemsState } from '../../types/models';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { updateDistribution } from '../distributions/store/actions/distributions.actions';

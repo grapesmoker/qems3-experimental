@@ -1,7 +1,7 @@
 import { createReducer, on, StateObservable } from '@ngrx/store';
 import { updateDistribution } from '../actions/distributions.actions';
 import { getDistributions, getDistributionsSuccess } from '../actions/distributions.actions';
-import { QemsState, Distribution } from 'src/app/types';
+import { QemsState, Distribution } from '../../../../types/models';
 import { createEntityAdapter, EntityState, EntityAdapter } from '@ngrx/entity';
 
 export interface DistState extends EntityState<Distribution> {}

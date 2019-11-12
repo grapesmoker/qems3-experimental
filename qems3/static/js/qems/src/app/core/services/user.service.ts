@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { GenericRestClientService } from '../services/generic-rest-client.service';
-import { User } from '../../../app/types';
+import { User } from '../types/models';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 

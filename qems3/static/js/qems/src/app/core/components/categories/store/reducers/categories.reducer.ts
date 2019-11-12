@@ -6,17 +6,17 @@ import { getCategories, getCategoriesSuccess } from '../actions/categories.actio
 import { Category } from 'src/app/core/types/models';
 
 
-export interface DistState extends EntityState<Category> {}
+export interface CategoriesState extends EntityState<Category> {}
 export const adapter: EntityAdapter<Category> = createEntityAdapter<Category>()
 export const initialState = adapter.getInitialState()
 
 const _categoriesReducer = createReducer(
     initialState,
-    on(getCategoriesSuccess, (state, { dists }) => {
-        return adapter.upsertMany(dists, state)
+    on(getCategoriesSuccess, (state, { categories }) => {
+        return adapter.upsertMany(categories, state)
     }),
-    on(updateCategory, (state, {dist}) => {
-        return adapter.updateOne(dist, state)
+    on(updateCategory, (state, {category}) => {
+        return adapter.updateOne(category, state)
     })
 )
 

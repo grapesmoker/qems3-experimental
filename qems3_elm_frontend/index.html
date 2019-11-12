@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://unpkg.com/@clr/ui/clr-ui.min.css" />
+    <style>
+      .jumbotron {
+        background-color: #e6ffe6;
+        text-align: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="elm-app-is-loaded-here"></div>
+    
+    <script src="elm.js"></script>
+    <script>
+      var app = Elm.Main.init({
+        node: document.getElementById("elm-app-is-loaded-here")
+      });      
+    </script>
+  </body>
+</html>

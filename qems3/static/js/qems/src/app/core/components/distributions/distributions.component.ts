@@ -1,13 +1,11 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, AfterViewInit, ViewChild } from '@angular/core';
 import { NewDistributionComponent } from '../../modals/new-distribution/new-distribution.component';
-import { Distribution, QemsState } from '../../../types';
+import { Distribution, QemsState } from '../../types/models';
 import { DistributionService } from '../../services/distribution.service'
-import { DistributionComponent } from '../distribution/distribution.component';
 import { Observable } from 'rxjs';
 import { Store, select } from '@ngrx/store';
-import { updateDistribution, getDistributions } from './store/actions/distributions.actions';
+import { getDistributions } from './store/actions/distributions.actions';
 import { selectDistributions } from './store/selectors/distributions.selectors';
-import { EntityState } from '@ngrx/entity';
 
 
 @Component({

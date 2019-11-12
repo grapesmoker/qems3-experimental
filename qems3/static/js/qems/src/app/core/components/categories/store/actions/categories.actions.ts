@@ -10,10 +10,10 @@ export const getCategories = createAction(
 
 export const getCategoriesSuccess = createAction(
     '[Categories Page] Load Success',
-    props<{dists: Category[]}>()
+    props<{categories: Category[]}>()
 );
 
 export const updateCategory = createAction(
     '[Distribution Page] Save',
-    props<{dist: Update<Category>}>()
+    props<{category: Update<Category>}>()
 );

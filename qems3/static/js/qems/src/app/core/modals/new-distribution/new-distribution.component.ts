@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { Distribution } from '../../../types';
+import { Distribution } from '../../types/models';
 
 @Component({
   selector: 'new-distribution-modal',
