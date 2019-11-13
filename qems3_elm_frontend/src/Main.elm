@@ -1,17 +1,32 @@
 module Main exposing (main)
 
-import Browser
+import Browser exposing (UrlRequest)
+import Browser.Navigation as Nav
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Route exposing (Route)
+import Url exposing (Url)
 
 
--- type alias Model =
---     { route : Route
---     , page : Page
---     }
+type alias Model =
+    { route : Route
+    , page : Page
+    , navKey: Nav.Key
+    }
 
+type Page
+    = NotFoundPage
+    | LoginPage
+    | RegisterPage
+
+type Msg
+    = LoginPageMsg
+    | RegisterPageMsg
+    | LinkClicked UrlRequest
+    | UrlChanged Url
+
+      
 view model =
 
     div [ class "main-container" ]
@@ -31,11 +46,50 @@ view model =
                   , a [ class "nav-link nav-icon" ] [ text "Register" ]
                   ]
               ]
-              
         ]
         
-              
-
 
 main =
-    view "dummy model"
+    Browser.application
+        { init = init
+        , view = view
+        , update = update
+        , subscriptions = \_ -> Sub.none
+        , onUrlRequest = LinkClicked
+        , onUrlChange = UrlChanged
+        }
+
+
+init : () -> Url -> Nav.Key -> ( Model, Cmd Msg)
+init flags url navKey =
+    let
+        model =
+            { route = Route.parseUrl url
+            , page = NotFoundPage
+            , navKey = navKey
+            }
+    in
+        initCurrentPage (model, Cmd.none)
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case ( msg, model.page ) of
+        ( _, _ ) ->
+            ( model, Cmd.none )
+
+
+initCurrentPage : (Model, Cmd Msg ) -> ( Model, Cmd Msg)
+initCurrentPage ( model, existingCmds ) =
+    let
+        ( currentPage, mappedPageCmds ) =
+            case model.route of
+                Route.NotFound -> ( NotFoundPage, Cmd.none )
+                Route.Login -> ( LoginPage, Cmd.none )
+                Route.Register -> ( RegisterPage, Cmd.none )
+    in
+        ( { model | page = currentPage }
+        , Cmd.batch [ existingCmds, mappedPageCmds ]
+        )
+        
+
