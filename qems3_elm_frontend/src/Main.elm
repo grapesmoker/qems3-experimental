@@ -1,6 +1,6 @@
 module Main exposing (main)
 
-import Browser exposing (UrlRequest)
+import Browser exposing (UrlRequest, Document)
 import Browser.Navigation as Nav
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -17,6 +17,7 @@ type alias Model =
 
 type Page
     = NotFoundPage
+    | HomePage
     | LoginPage
     | RegisterPage
 
@@ -26,27 +27,31 @@ type Msg
     | LinkClicked UrlRequest
     | UrlChanged Url
 
-      
-view model =
 
-    div [ class "main-container" ]
-        [ header [ class "header header-6"]
-              [ div [ class "branding" ]
-                    [ a [] [ span [ class "title" ] [ text "QEMS3" ] ] ]
-              , div [ class "header-nav" ]
-                  [ a [ class "nav-link" ]
-                        [ span [ class "nav-text" ] [ text "Sets" ] ]
-                  , a [ class "nav-link" ]
-                        [ span [ class "nav-text" ] [ text "Distributions" ] ]
-                  , a [ class "nav-link" ]
-                        [ span [ class "nav-text" ] [ text "Categories" ] ]
-                  ]
-              , div [ class "header-actions" ]
-                  [ a [ class "nav-link nav-icon" ] [ text "Login" ]
-                  , a [ class "nav-link nav-icon" ] [ text "Register" ]
-                  ]
-              ]
-        ]
+view : Model -> Document Msg
+view model =
+    { title = "QEMS v3"
+    , body = [
+           div [ class "main-container" ]
+               [ header [ class "header header-6"]
+                     [ div [ class "branding" ]
+                           [ a [] [ span [ class "title" ] [ text "QEMS3" ] ] ]
+                     , div [ class "header-nav" ]
+                         [ a [ class "nav-link", href "sets" ]
+                               [ span [ class "nav-text" ] [ text "Sets" ] ]
+                         , a [ class "nav-link", href "distributions" ]
+                             [ span [ class "nav-text" ] [ text "Distributions" ] ]
+                         , a [ class "nav-link", href "categories" ]
+                             [ span [ class "nav-text" ] [ text "Categories" ] ]
+                         ]
+                     , div [ class "header-actions" ]
+                         [ a [ class "nav-link nav-icon" ] [ text "Login" ]
+                         , a [ class "nav-link nav-icon" ] [ text "Register" ]
+                         ]
+                     ]
+               ]
+          ]
+    }
         
 
 main =
@@ -75,6 +80,23 @@ init flags url navKey =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case ( msg, model.page ) of
+        ( LinkClicked urlRequest, _ ) ->
+            case urlRequest of
+                Browser.Internal url ->
+                    ( model
+                    , Nav.pushUrl model.navKey (Url.toString url)
+                    )
+                Browser.External url ->
+                    ( model
+                    , Nav.load url
+                    )
+        ( UrlChanged url, _ ) ->
+            let
+                newRoute =
+                    Route.parseUrl url
+            in
+                ( { model | route = newRoute }, Cmd.none )
+                    |> initCurrentPage
         ( _, _ ) ->
             ( model, Cmd.none )
 
@@ -85,11 +107,13 @@ initCurrentPage ( model, existingCmds ) =
         ( currentPage, mappedPageCmds ) =
             case model.route of
                 Route.NotFound -> ( NotFoundPage, Cmd.none )
+                Route.Home -> ( HomePage, Cmd.none )
                 Route.Login -> ( LoginPage, Cmd.none )
                 Route.Register -> ( RegisterPage, Cmd.none )
     in
         ( { model | page = currentPage }
         , Cmd.batch [ existingCmds, mappedPageCmds ]
         )
+ 
         
 
