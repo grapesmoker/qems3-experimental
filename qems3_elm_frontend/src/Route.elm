@@ -14,9 +14,11 @@ parseUrl : Url -> Route
 parseUrl url =
     case parse matchRoute url of
         Just route ->
+            Debug.log url.path
             route
 
         Nothing ->
+            Debug.log ("path: " ++ url.path)
             NotFound
 
 
