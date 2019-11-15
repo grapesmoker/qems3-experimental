@@ -20,7 +20,7 @@ loginPageView =
          , div [ class "login-group" ]
              [ Html.node "clr-input-container" []
                [ label [ class "clr-sr-only" ] [ text "Username" ]
-               , input [ type_ "text", name "username", placeholder "Username" ] []
+               , input [ class "clr-input", type_ "text", name "username", placeholder "Username", attribute "clrInput" ""] []
              ]
            ]
          ]

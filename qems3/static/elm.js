@@ -10991,10 +10991,21 @@ var $author$project$Main$homePageView = A2(
 							_List_fromArray(
 								[
 									$elm$html$Html$text('Login')
+								])),
+							A2(
+							$elm$html$Html$a,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('nav-link nav-icon')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Register')
 								]))
 						]))
 				]))
 		]));
+var $elm$html$Html$Attributes$attribute = $elm$virtual_dom$VirtualDom$attribute;
 var $elm$html$Html$form = _VirtualDom_node('form');
 var $elm$html$Html$h3 = _VirtualDom_node('h3');
 var $elm$html$Html$h5 = _VirtualDom_node('h5');
@@ -11075,9 +11086,11 @@ var $author$project$Page$Login$loginPageView = A2(
 									$elm$html$Html$input,
 									_List_fromArray(
 										[
+											$elm$html$Html$Attributes$class('clr-input'),
 											$elm$html$Html$Attributes$type_('text'),
 											$elm$html$Html$Attributes$name('username'),
-											$elm$html$Html$Attributes$placeholder('Username')
+											$elm$html$Html$Attributes$placeholder('Username'),
+											A2($elm$html$Html$Attributes$attribute, 'clrInput', '')
 										]),
 									_List_Nil)
 								]))

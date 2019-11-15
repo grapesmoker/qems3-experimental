@@ -121,7 +121,7 @@ homePageView =
                   ]
               , div [ class "header-actions" ]
                   [ a [ class "nav-link nav-icon", href "login" ] [ text "Login" ]
-                 -- , a [ class "nav-link nav-icon" ] [ text "Register" ]
+                  , a [ class "nav-link nav-icon" ] [ text "Register" ]
                   ]
               ]
         ]
