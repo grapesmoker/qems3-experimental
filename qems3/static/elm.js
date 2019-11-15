@@ -10637,12 +10637,8 @@ var $author$project$Route$matchRoute = $elm$url$Url$Parser$oneOf(
 			A2($elm$url$Url$Parser$map, $author$project$Route$Home, $elm$url$Url$Parser$top),
 			A2(
 			$elm$url$Url$Parser$map,
-			$author$project$Route$Home,
-			$elm$url$Url$Parser$s('/static/index.html')),
-			A2(
-			$elm$url$Url$Parser$map,
 			$author$project$Route$Login,
-			$elm$url$Url$Parser$s('/static/login')),
+			$elm$url$Url$Parser$s('login')),
 			A2(
 			$elm$url$Url$Parser$map,
 			$author$project$Route$Register,
@@ -10767,7 +10763,7 @@ var $author$project$Route$parseUrl = function (url) {
 	var _v0 = A2($elm$url$Url$Parser$parse, $author$project$Route$matchRoute, url);
 	if (_v0.$ === 'Just') {
 		var route = _v0.a;
-		return route;
+		return A2($elm$core$Debug$log, url.path, route);
 	} else {
 		return A2($elm$core$Debug$log, 'path: ' + url.path, $author$project$Route$NotFound);
 	}
