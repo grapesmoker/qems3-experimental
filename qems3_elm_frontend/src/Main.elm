@@ -9,10 +9,22 @@ import Route exposing (Route)
 import Url exposing (Url)
 import Page.Login as Login
 
+
+type alias User =
+    { username : String
+    , password : String
+    , token : String
+    }
+
 type alias Model =
     { route : Route
     , page : Page
-    , navKey: Nav.Key
+    , navKey : Nav.Key
+    , user : User
+    }
+
+type alias Flags =
+    { csrftoken: String
     }
 
 type Page
@@ -20,6 +32,9 @@ type Page
     | HomePage
     | LoginPage
     | RegisterPage
+    | SetsPage
+    | DistributionsPage
+    | CategoriesPage
 
 type Msg
     = LoginPageMsg Login.Msg
@@ -40,8 +55,7 @@ currentView model =
     case model.page of
         HomePage -> homePageView
         LoginPage -> Login.loginPageView |> Html.map LoginPageMsg
-        NotFoundPage -> notFoundView
-        RegisterPage -> notFoundView
+        _ -> notFoundView
 
 main =
     Browser.application
@@ -54,15 +68,20 @@ main =
         }
 
 
-init : () -> Url -> Nav.Key -> ( Model, Cmd Msg)
+init : Flags -> Url -> Nav.Key -> ( Model, Cmd Msg)
 init flags url navKey =
     let
         model =
             { route = Route.parseUrl url
             , page = HomePage
             , navKey = navKey
+            , user = { username = ""
+                     , password = ""
+                     , token = ""
+                     }
             }
     in
+        Debug.log (Debug.toString flags)
         initCurrentPage (model, Cmd.none)
 
 
@@ -86,6 +105,23 @@ update msg model =
             in
                 ( { model | route = newRoute }, Cmd.none )
                     |> initCurrentPage
+        ( LoginPageMsg login, _ ) ->
+            let
+                _ = Debug.log "login" login
+            in
+                case login of
+                    Login.SetUsername data ->
+                        -- Debug.log "setting username to" data
+                        let
+                            oldUser = model.user
+                            newUser = { oldUser | username = data }
+                            _ = Debug.log "the user is now" newUser
+                        in
+                            ( { model | user = newUser }, Cmd.none )
+                    _ ->
+                        Debug.log "some other thing happening"
+                        ( model, Cmd.none )
+
         ( _, _ ) ->
             ( model, Cmd.none )
 

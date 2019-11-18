@@ -13,10 +13,15 @@
   </head>
 
   <body>
-    <div id="elm-app-is-loaded-here"></div>
-    <script>
+    <script type="module" src="{% static 'js/js.cookie.js' %}"></script>
+    <script type="module">
+      import Cookies from '{% static 'js/js.cookie.js' %}'
+
+      var csrf = Cookies.get('csrftoken')
+      console.log(csrf)
+
       var app = Elm.Main.init({
-        node: document.getElementById("elm-app-is-loaded-here")
+        flags: {csrftoken: csrf}
       });      
     </script>
   </body>
