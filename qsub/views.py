@@ -1,11 +1,14 @@
 import json
 
+from django.conf import settings
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, JsonResponse
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
-# Create your views here.
+from rest_framework.authtoken.models import Token
 
 
 @ensure_csrf_cookie
@@ -17,8 +20,6 @@ def index(request):
 @csrf_exempt
 def webapp_login(request):
 
-    import ipdb
-    ipdb.set_trace()
     try:
         post_data = json.loads(request.body)
     except ValueError:
@@ -38,4 +39,10 @@ def webapp_login(request):
 
     login(request, user)
 
-    return HttpResponse({'status': 'OK'})
+    return JsonResponse(data={'status': 'OK', 'token': str(Token.objects.get(user=user))})
+
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)

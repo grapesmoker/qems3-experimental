@@ -5,9 +5,12 @@ import Browser.Navigation as Nav
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
+import Http exposing (post, expectJson, expectString, Error)
 import Route exposing (Route)
 import Url exposing (Url)
 import Page.Login as Login
+import Json.Encode as Encode exposing (..)
+import Json.Decode as Decode exposing (Decoder, list, string)
 
 
 type alias User =
@@ -41,6 +44,7 @@ type Msg
     | RegisterPageMsg
     | LinkClicked UrlRequest
     | UrlChanged Url
+    | AuthResponseMsg (Result Http.Error String)
 
 
 view : Model -> Document Msg
@@ -118,9 +122,33 @@ update msg model =
                             _ = Debug.log "the user is now" newUser
                         in
                             ( { model | user = newUser }, Cmd.none )
+                    Login.SetPassword data ->
+                        let
+                            oldUser = model.user
+                            newUser = { oldUser | password = data }
+                            _ = Debug.log "the user is now" newUser
+                        in
+                            ( { model | user = newUser }, Cmd.none )
+                    Login.SubmitLogIn ->
+                        let
+                            _ = Debug.log "submitting model" model
+                            body =
+                                model.user |> encodeUser |> Http.jsonBody
+                        in
+                            ( model, Http.post
+                                  { url = "qsub/webapp_login/"
+                                  , body = body
+                                  , expect = Http.expectJson AuthResponseMsg tokenDecoder
+                                  } )
                     _ ->
                         Debug.log "some other thing happening"
                         ( model, Cmd.none )
+
+        ( AuthResponseMsg result, _ ) ->
+            let
+                _ = Debug.log "result" result
+            in
+                ( model, Cmd.none )
 
         ( _, _ ) ->
             ( model, Cmd.none )
@@ -186,4 +214,29 @@ notFoundView =
         ]
 
 
-         
+encodeUser : User -> Encode.Value
+encodeUser user =
+    Encode.object [ ("username", Encode.string user.username)
+                  , ("password", Encode.string user.password)
+                  ]
+    
+
+tokenDecoder : Decoder String
+tokenDecoder =
+    Decode.field "token" Decode.string
+
+
+getToken : Model -> Result Http.Error String -> ( Model, Cmd Msg )
+getToken model result =
+    case result of
+        Ok newToken ->
+            let
+                oldUser = model.user
+                newUser = { oldUser | token = newToken, password = "" }
+            in
+                ( { model | user = newUser }, Cmd.none )
+        Err error ->
+            let
+                _ = Debug.log "error" error
+            in
+                ( model, Cmd.none )
