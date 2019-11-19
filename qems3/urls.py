@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import include, url
-from qsub import views
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,5 +24,6 @@ urlpatterns = [
     url(r'^rest-auth/', include('rest_auth.urls')),
     url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
     url(r'qsub/', include('qsub.urls', namespace='qsub')),
-    path('', views.index, name='index')
+    url(r'^$', TemplateView.as_view(template_name='index.html')),
+    url(r'^(?P<path>.*)/$', TemplateView.as_view(template_name='index.html')),
 ]
