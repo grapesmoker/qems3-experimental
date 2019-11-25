@@ -64,7 +64,6 @@ currentView model =
         HomePage -> homePageView
         LoginPage -> Login.loginPageView |> Html.map LoginPageMsg
         CategoriesPage -> Categories.view model.categoriesModel |> Html.map CategoriesPageMsg
-        -- CategoriesPage -> 
         _ -> notFoundView
 
 main =
@@ -159,22 +158,24 @@ update msg model =
             in
                 ( model, Cmd.none )
 
-        ( CategoriesPageMsg categories, _ ) ->
-            case categories of
-                Categories.CategoriesResponse response ->
-                    let
-                        ( updatedCategoriesModel, cmd ) =
-                            Categories.update (Categories.CategoriesResponse response) model.categoriesModel
-                    in
-                        ( { model | categoriesModel = updatedCategoriesModel }, cmd |> Cmd.map CategoriesPageMsg )
+        ( CategoriesPageMsg categories, CategoriesPage ) ->
+            let
+                ( updatedCategoriesModel, cmd ) =
+                    Categories.update categories model.categoriesModel
+            in
+                ( { model | categoriesModel = updatedCategoriesModel }, cmd |> Cmd.map CategoriesPageMsg )
                 
+            
+--            case categories of
+--                Categories.CategoriesResponse response ->
+                    
                 -- Categories.CategoriesResponse response ->
                 --     let
                 --         _ = Debug.log "response" response
                 --     in
                 --         ( model, Cmd.none )
-                _ ->
-                    ( model, Cmd.none )
+--                _ ->
+--                    ( model, Cmd.none )
                 -- ( model, Categories.getCategories |> Cmd.map CategoriesPageMsg )
 
                     

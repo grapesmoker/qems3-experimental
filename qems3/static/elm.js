@@ -11472,103 +11472,104 @@ var $author$project$Page$Categories$update = F2(
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		var _v0 = _Utils_Tuple2(msg, model.page);
-		switch (_v0.a.$) {
-			case 'LinkClicked':
-				var urlRequest = _v0.a.a;
-				if (urlRequest.$ === 'Internal') {
-					var url = urlRequest.a;
-					return _Utils_Tuple2(
-						model,
-						A2(
-							$elm$browser$Browser$Navigation$pushUrl,
-							model.navKey,
-							$elm$url$Url$toString(url)));
-				} else {
-					var url = urlRequest.a;
-					return _Utils_Tuple2(
-						model,
-						$elm$browser$Browser$Navigation$load(url));
-				}
-			case 'UrlChanged':
-				var url = _v0.a.a;
-				var newRoute = $author$project$Route$parseUrl(url);
-				return $author$project$Main$initCurrentPage(
-					_Utils_Tuple2(
-						_Utils_update(
-							model,
-							{route: newRoute}),
-						$elm$core$Platform$Cmd$none));
-			case 'LoginPageMsg':
-				var login = _v0.a.a;
-				var _v2 = A2($elm$core$Debug$log, 'login', login);
-				switch (login.$) {
-					case 'SetUsername':
-						var data = login.a;
-						var oldUser = model.user;
-						var newUser = _Utils_update(
-							oldUser,
-							{username: data});
-						var _v4 = A2($elm$core$Debug$log, 'the user is now', newUser);
+		_v0$5:
+		while (true) {
+			switch (_v0.a.$) {
+				case 'LinkClicked':
+					var urlRequest = _v0.a.a;
+					if (urlRequest.$ === 'Internal') {
+						var url = urlRequest.a;
 						return _Utils_Tuple2(
+							model,
+							A2(
+								$elm$browser$Browser$Navigation$pushUrl,
+								model.navKey,
+								$elm$url$Url$toString(url)));
+					} else {
+						var url = urlRequest.a;
+						return _Utils_Tuple2(
+							model,
+							$elm$browser$Browser$Navigation$load(url));
+					}
+				case 'UrlChanged':
+					var url = _v0.a.a;
+					var newRoute = $author$project$Route$parseUrl(url);
+					return $author$project$Main$initCurrentPage(
+						_Utils_Tuple2(
 							_Utils_update(
 								model,
-								{user: newUser}),
-							$elm$core$Platform$Cmd$none);
-					case 'SetPassword':
-						var data = login.a;
-						var oldUser = model.user;
-						var newUser = _Utils_update(
-							oldUser,
-							{password: data});
-						var _v5 = A2($elm$core$Debug$log, 'the user is now', newUser);
-						return _Utils_Tuple2(
-							_Utils_update(
+								{route: newRoute}),
+							$elm$core$Platform$Cmd$none));
+				case 'LoginPageMsg':
+					var login = _v0.a.a;
+					var _v2 = A2($elm$core$Debug$log, 'login', login);
+					switch (login.$) {
+						case 'SetUsername':
+							var data = login.a;
+							var oldUser = model.user;
+							var newUser = _Utils_update(
+								oldUser,
+								{username: data});
+							var _v4 = A2($elm$core$Debug$log, 'the user is now', newUser);
+							return _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{user: newUser}),
+								$elm$core$Platform$Cmd$none);
+						case 'SetPassword':
+							var data = login.a;
+							var oldUser = model.user;
+							var newUser = _Utils_update(
+								oldUser,
+								{password: data});
+							var _v5 = A2($elm$core$Debug$log, 'the user is now', newUser);
+							return _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{user: newUser}),
+								$elm$core$Platform$Cmd$none);
+						case 'SubmitLogIn':
+							var body = $elm$http$Http$jsonBody(
+								$author$project$Main$encodeUser(model.user));
+							var _v6 = A2($elm$core$Debug$log, 'submitting model', model);
+							return _Utils_Tuple2(
 								model,
-								{user: newUser}),
-							$elm$core$Platform$Cmd$none);
-					case 'SubmitLogIn':
-						var body = $elm$http$Http$jsonBody(
-							$author$project$Main$encodeUser(model.user));
-						var _v6 = A2($elm$core$Debug$log, 'submitting model', model);
-						return _Utils_Tuple2(
-							model,
-							$elm$http$Http$post(
-								{
-									body: body,
-									expect: A2($elm$http$Http$expectJson, $author$project$Main$AuthResponseMsg, $author$project$Main$tokenDecoder),
-									url: 'qsub/webapp_login/'
-								}));
-					default:
-						return A2(
-							$elm$core$Debug$log,
-							'some other thing happening',
-							_Utils_Tuple2(model, $elm$core$Platform$Cmd$none));
-				}
-			case 'AuthResponseMsg':
-				var result = _v0.a.a;
-				var _v7 = A2($elm$core$Debug$log, 'result', result);
-				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-			case 'CategoriesPageMsg':
-				var categories = _v0.a.a;
-				if (categories.$ === 'CategoriesResponse') {
-					var response = categories.a;
-					var _v9 = A2(
-						$author$project$Page$Categories$update,
-						$author$project$Page$Categories$CategoriesResponse(response),
-						model.categoriesModel);
-					var updatedCategoriesModel = _v9.a;
-					var cmd = _v9.b;
-					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{categoriesModel: updatedCategoriesModel}),
-						A2($elm$core$Platform$Cmd$map, $author$project$Main$CategoriesPageMsg, cmd));
-				} else {
+								$elm$http$Http$post(
+									{
+										body: body,
+										expect: A2($elm$http$Http$expectJson, $author$project$Main$AuthResponseMsg, $author$project$Main$tokenDecoder),
+										url: 'qsub/webapp_login/'
+									}));
+						default:
+							return A2(
+								$elm$core$Debug$log,
+								'some other thing happening',
+								_Utils_Tuple2(model, $elm$core$Platform$Cmd$none));
+					}
+				case 'AuthResponseMsg':
+					var result = _v0.a.a;
+					var _v7 = A2($elm$core$Debug$log, 'result', result);
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-				}
-			default:
-				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				case 'CategoriesPageMsg':
+					if (_v0.b.$ === 'CategoriesPage') {
+						var categories = _v0.a.a;
+						var _v8 = _v0.b;
+						var _v9 = A2($author$project$Page$Categories$update, categories, model.categoriesModel);
+						var updatedCategoriesModel = _v9.a;
+						var cmd = _v9.b;
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{categoriesModel: updatedCategoriesModel}),
+							A2($elm$core$Platform$Cmd$map, $author$project$Main$CategoriesPageMsg, cmd));
+					} else {
+						break _v0$5;
+					}
+				default:
+					break _v0$5;
+			}
 		}
+		return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 	});
 var $author$project$Main$LoginPageMsg = function (a) {
 	return {$: 'LoginPageMsg', a: a};
