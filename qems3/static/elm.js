@@ -4895,23 +4895,6 @@ function _Browser_load(url)
 }
 
 
-function _Url_percentEncode(string)
-{
-	return encodeURIComponent(string);
-}
-
-function _Url_percentDecode(string)
-{
-	try
-	{
-		return $elm$core$Maybe$Just(decodeURIComponent(string));
-	}
-	catch (e)
-	{
-		return $elm$core$Maybe$Nothing;
-	}
-}
-
 
 // SEND REQUEST
 
@@ -5085,6 +5068,23 @@ function _Http_track(router, xhr, tracker)
 			size: event.lengthComputable ? $elm$core$Maybe$Just(event.total) : $elm$core$Maybe$Nothing
 		}))));
 	});
+}
+
+function _Url_percentEncode(string)
+{
+	return encodeURIComponent(string);
+}
+
+function _Url_percentDecode(string)
+{
+	try
+	{
+		return $elm$core$Maybe$Just(decodeURIComponent(string));
+	}
+	catch (e)
+	{
+		return $elm$core$Maybe$Nothing;
+	}
 }var $author$project$Main$LinkClicked = function (a) {
 	return {$: 'LinkClicked', a: a};
 };
@@ -10691,291 +10691,151 @@ var $elm$core$Basics$never = function (_v0) {
 };
 var $elm$browser$Browser$application = _Browser_application;
 var $author$project$Main$HomePage = {$: 'HomePage'};
+var $krisajenkins$remotedata$RemoteData$NotAsked = {$: 'NotAsked'};
+var $author$project$Main$CategoriesPage = {$: 'CategoriesPage'};
+var $author$project$Main$CategoriesPageMsg = function (a) {
+	return {$: 'CategoriesPageMsg', a: a};
+};
 var $author$project$Main$LoginPage = {$: 'LoginPage'};
 var $author$project$Main$NotFoundPage = {$: 'NotFoundPage'};
 var $author$project$Main$RegisterPage = {$: 'RegisterPage'};
-var $author$project$Main$initCurrentPage = function (_v0) {
-	var model = _v0.a;
-	var existingCmds = _v0.b;
-	var _v1 = function () {
-		var _v2 = model.route;
-		switch (_v2.$) {
-			case 'NotFound':
-				return _Utils_Tuple2($author$project$Main$NotFoundPage, $elm$core$Platform$Cmd$none);
-			case 'Home':
-				return _Utils_Tuple2($author$project$Main$HomePage, $elm$core$Platform$Cmd$none);
-			case 'Login':
-				return _Utils_Tuple2($author$project$Main$LoginPage, $elm$core$Platform$Cmd$none);
-			default:
-				return _Utils_Tuple2($author$project$Main$RegisterPage, $elm$core$Platform$Cmd$none);
-		}
-	}();
-	var currentPage = _v1.a;
-	var mappedPageCmds = _v1.b;
-	return _Utils_Tuple2(
-		_Utils_update(
-			model,
-			{page: currentPage}),
-		$elm$core$Platform$Cmd$batch(
-			_List_fromArray(
-				[existingCmds, mappedPageCmds])));
+var $author$project$Page$Categories$CategoriesResponse = function (a) {
+	return {$: 'CategoriesResponse', a: a};
 };
-var $elm$core$Debug$log = _Debug_log;
-var $author$project$Route$NotFound = {$: 'NotFound'};
-var $author$project$Route$Home = {$: 'Home'};
-var $author$project$Route$Login = {$: 'Login'};
-var $author$project$Route$Register = {$: 'Register'};
-var $elm$url$Url$Parser$Parser = function (a) {
-	return {$: 'Parser', a: a};
-};
-var $elm$url$Url$Parser$State = F5(
-	function (visited, unvisited, params, frag, value) {
-		return {frag: frag, params: params, unvisited: unvisited, value: value, visited: visited};
+var $author$project$Models$Category$Category = F5(
+	function (id, name, description, parentCategory, subcategories) {
+		return {description: description, id: id, name: name, parentCategory: parentCategory, subcategories: subcategories};
 	});
-var $elm$url$Url$Parser$mapState = F2(
-	function (func, _v0) {
-		var visited = _v0.visited;
-		var unvisited = _v0.unvisited;
-		var params = _v0.params;
-		var frag = _v0.frag;
-		var value = _v0.value;
-		return A5(
-			$elm$url$Url$Parser$State,
-			visited,
-			unvisited,
-			params,
-			frag,
-			func(value));
-	});
-var $elm$url$Url$Parser$map = F2(
-	function (subValue, _v0) {
-		var parseArg = _v0.a;
-		return $elm$url$Url$Parser$Parser(
-			function (_v1) {
-				var visited = _v1.visited;
-				var unvisited = _v1.unvisited;
-				var params = _v1.params;
-				var frag = _v1.frag;
-				var value = _v1.value;
-				return A2(
-					$elm$core$List$map,
-					$elm$url$Url$Parser$mapState(value),
-					parseArg(
-						A5($elm$url$Url$Parser$State, visited, unvisited, params, frag, subValue)));
-			});
-	});
-var $elm$url$Url$Parser$oneOf = function (parsers) {
-	return $elm$url$Url$Parser$Parser(
-		function (state) {
-			return A2(
-				$elm$core$List$concatMap,
-				function (_v0) {
-					var parser = _v0.a;
-					return parser(state);
-				},
-				parsers);
-		});
+var $author$project$Models$Category$SubCategories = function (a) {
+	return {$: 'SubCategories', a: a};
 };
-var $elm$url$Url$Parser$s = function (str) {
-	return $elm$url$Url$Parser$Parser(
-		function (_v0) {
-			var visited = _v0.visited;
-			var unvisited = _v0.unvisited;
-			var params = _v0.params;
-			var frag = _v0.frag;
-			var value = _v0.value;
-			if (!unvisited.b) {
-				return _List_Nil;
-			} else {
-				var next = unvisited.a;
-				var rest = unvisited.b;
-				return _Utils_eq(next, str) ? _List_fromArray(
-					[
-						A5(
-						$elm$url$Url$Parser$State,
-						A2($elm$core$List$cons, next, visited),
-						rest,
-						params,
-						frag,
-						value)
-					]) : _List_Nil;
-			}
-		});
+var $author$project$Models$Category$CategoryId = function (a) {
+	return {$: 'CategoryId', a: a};
 };
-var $elm$url$Url$Parser$top = $elm$url$Url$Parser$Parser(
-	function (state) {
-		return _List_fromArray(
-			[state]);
-	});
-var $author$project$Route$matchRoute = $elm$url$Url$Parser$oneOf(
-	_List_fromArray(
-		[
-			A2($elm$url$Url$Parser$map, $author$project$Route$Home, $elm$url$Url$Parser$top),
-			A2(
-			$elm$url$Url$Parser$map,
-			$author$project$Route$Login,
-			$elm$url$Url$Parser$s('login')),
-			A2(
-			$elm$url$Url$Parser$map,
-			$author$project$Route$Register,
-			$elm$url$Url$Parser$s('register'))
-		]));
-var $elm$url$Url$Parser$getFirstMatch = function (states) {
-	getFirstMatch:
-	while (true) {
-		if (!states.b) {
-			return $elm$core$Maybe$Nothing;
-		} else {
-			var state = states.a;
-			var rest = states.b;
-			var _v1 = state.unvisited;
-			if (!_v1.b) {
-				return $elm$core$Maybe$Just(state.value);
-			} else {
-				if ((_v1.a === '') && (!_v1.b.b)) {
-					return $elm$core$Maybe$Just(state.value);
-				} else {
-					var $temp$states = rest;
-					states = $temp$states;
-					continue getFirstMatch;
-				}
-			}
-		}
-	}
-};
-var $elm$url$Url$Parser$removeFinalEmpty = function (segments) {
-	if (!segments.b) {
-		return _List_Nil;
-	} else {
-		if ((segments.a === '') && (!segments.b.b)) {
-			return _List_Nil;
-		} else {
-			var segment = segments.a;
-			var rest = segments.b;
-			return A2(
-				$elm$core$List$cons,
-				segment,
-				$elm$url$Url$Parser$removeFinalEmpty(rest));
-		}
-	}
-};
-var $elm$url$Url$Parser$preparePath = function (path) {
-	var _v0 = A2($elm$core$String$split, '/', path);
-	if (_v0.b && (_v0.a === '')) {
-		var segments = _v0.b;
-		return $elm$url$Url$Parser$removeFinalEmpty(segments);
-	} else {
-		var segments = _v0;
-		return $elm$url$Url$Parser$removeFinalEmpty(segments);
-	}
-};
-var $elm$url$Url$Parser$addToParametersHelp = F2(
-	function (value, maybeList) {
-		if (maybeList.$ === 'Nothing') {
-			return $elm$core$Maybe$Just(
-				_List_fromArray(
-					[value]));
-		} else {
-			var list = maybeList.a;
-			return $elm$core$Maybe$Just(
-				A2($elm$core$List$cons, value, list));
-		}
-	});
-var $elm$url$Url$percentDecode = _Url_percentDecode;
-var $elm$url$Url$Parser$addParam = F2(
-	function (segment, dict) {
-		var _v0 = A2($elm$core$String$split, '=', segment);
-		if ((_v0.b && _v0.b.b) && (!_v0.b.b.b)) {
-			var rawKey = _v0.a;
-			var _v1 = _v0.b;
-			var rawValue = _v1.a;
-			var _v2 = $elm$url$Url$percentDecode(rawKey);
-			if (_v2.$ === 'Nothing') {
-				return dict;
-			} else {
-				var key = _v2.a;
-				var _v3 = $elm$url$Url$percentDecode(rawValue);
-				if (_v3.$ === 'Nothing') {
-					return dict;
-				} else {
-					var value = _v3.a;
-					return A3(
-						$elm$core$Dict$update,
-						key,
-						$elm$url$Url$Parser$addToParametersHelp(value),
-						dict);
-				}
-			}
-		} else {
-			return dict;
-		}
-	});
-var $elm$url$Url$Parser$prepareQuery = function (maybeQuery) {
-	if (maybeQuery.$ === 'Nothing') {
-		return $elm$core$Dict$empty;
-	} else {
-		var qry = maybeQuery.a;
-		return A3(
-			$elm$core$List$foldr,
-			$elm$url$Url$Parser$addParam,
-			$elm$core$Dict$empty,
-			A2($elm$core$String$split, '&', qry));
-	}
-};
-var $elm$url$Url$Parser$parse = F2(
-	function (_v0, url) {
-		var parser = _v0.a;
-		return $elm$url$Url$Parser$getFirstMatch(
-			parser(
-				A5(
-					$elm$url$Url$Parser$State,
-					_List_Nil,
-					$elm$url$Url$Parser$preparePath(url.path),
-					$elm$url$Url$Parser$prepareQuery(url.query),
-					url.fragment,
-					$elm$core$Basics$identity)));
-	});
-var $author$project$Route$parseUrl = function (url) {
-	var _v0 = A2($elm$url$Url$Parser$parse, $author$project$Route$matchRoute, url);
-	if (_v0.$ === 'Just') {
-		var route = _v0.a;
-		return A2($elm$core$Debug$log, url.path, route);
-	} else {
-		return A2($elm$core$Debug$log, 'path: ' + url.path, $author$project$Route$NotFound);
-	}
-};
-var $elm$core$Debug$toString = _Debug_toString;
-var $author$project$Main$init = F3(
-	function (flags, url, navKey) {
-		var model = {
-			navKey: navKey,
-			page: $author$project$Main$HomePage,
-			route: $author$project$Route$parseUrl(url),
-			user: {password: '', token: '', username: ''}
-		};
-		return A3(
-			$elm$core$Debug$log,
-			$elm$core$Debug$toString(flags),
-			$author$project$Main$initCurrentPage,
-			_Utils_Tuple2(model, $elm$core$Platform$Cmd$none));
-	});
-var $elm$core$Platform$Sub$batch = _Platform_batch;
-var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
-var $author$project$Main$AuthResponseMsg = function (a) {
-	return {$: 'AuthResponseMsg', a: a};
-};
-var $author$project$Main$encodeUser = function (user) {
-	return $elm$json$Json$Encode$object(
+var $elm$json$Json$Decode$null = _Json_decodeNull;
+var $elm$json$Json$Decode$oneOf = _Json_oneOf;
+var $elm$json$Json$Decode$nullable = function (decoder) {
+	return $elm$json$Json$Decode$oneOf(
 		_List_fromArray(
 			[
-				_Utils_Tuple2(
-				'username',
-				$elm$json$Json$Encode$string(user.username)),
-				_Utils_Tuple2(
-				'password',
-				$elm$json$Json$Encode$string(user.password))
+				$elm$json$Json$Decode$null($elm$core$Maybe$Nothing),
+				A2($elm$json$Json$Decode$map, $elm$core$Maybe$Just, decoder)
 			]));
 };
+var $author$project$Models$Category$idDecoder = A2(
+	$elm$json$Json$Decode$map,
+	$author$project$Models$Category$CategoryId,
+	$elm$json$Json$Decode$nullable($elm$json$Json$Decode$int));
+var $elm$json$Json$Decode$lazy = function (thunk) {
+	return A2(
+		$elm$json$Json$Decode$andThen,
+		thunk,
+		$elm$json$Json$Decode$succeed(_Utils_Tuple0));
+};
+var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$custom = $elm$json$Json$Decode$map2($elm$core$Basics$apR);
+var $elm$json$Json$Decode$fail = _Json_fail;
+var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optionalDecoder = F3(
+	function (pathDecoder, valDecoder, fallback) {
+		var nullOr = function (decoder) {
+			return $elm$json$Json$Decode$oneOf(
+				_List_fromArray(
+					[
+						decoder,
+						$elm$json$Json$Decode$null(fallback)
+					]));
+		};
+		var handleResult = function (input) {
+			var _v0 = A2($elm$json$Json$Decode$decodeValue, pathDecoder, input);
+			if (_v0.$ === 'Ok') {
+				var rawValue = _v0.a;
+				var _v1 = A2(
+					$elm$json$Json$Decode$decodeValue,
+					nullOr(valDecoder),
+					rawValue);
+				if (_v1.$ === 'Ok') {
+					var finalResult = _v1.a;
+					return $elm$json$Json$Decode$succeed(finalResult);
+				} else {
+					var finalErr = _v1.a;
+					return $elm$json$Json$Decode$fail(
+						$elm$json$Json$Decode$errorToString(finalErr));
+				}
+			} else {
+				return $elm$json$Json$Decode$succeed(fallback);
+			}
+		};
+		return A2($elm$json$Json$Decode$andThen, handleResult, $elm$json$Json$Decode$value);
+	});
+var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional = F4(
+	function (key, valDecoder, fallback, decoder) {
+		return A2(
+			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$custom,
+			A3(
+				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optionalDecoder,
+				A2($elm$json$Json$Decode$field, key, $elm$json$Json$Decode$value),
+				valDecoder,
+				fallback),
+			decoder);
+	});
+var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required = F3(
+	function (key, valDecoder, decoder) {
+		return A2(
+			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$custom,
+			A2($elm$json$Json$Decode$field, key, valDecoder),
+			decoder);
+	});
+function $author$project$Models$Category$cyclic$categoriesDecoder() {
+	return $elm$json$Json$Decode$list(
+		$author$project$Models$Category$cyclic$categoryDecoder());
+}
+function $author$project$Models$Category$cyclic$categoryDecoder() {
+	return A4(
+		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+		'subcategories',
+		$author$project$Models$Category$cyclic$subCategoriesDecoder(),
+		$author$project$Models$Category$SubCategories(_List_Nil),
+		A3(
+			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+			'parent_category',
+			$author$project$Models$Category$idDecoder,
+			A3(
+				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+				'description',
+				$elm$json$Json$Decode$string,
+				A3(
+					$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+					'name',
+					$elm$json$Json$Decode$string,
+					A3(
+						$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+						'id',
+						$author$project$Models$Category$idDecoder,
+						$elm$json$Json$Decode$succeed($author$project$Models$Category$Category))))));
+}
+function $author$project$Models$Category$cyclic$subCategoriesDecoder() {
+	return A2(
+		$elm$json$Json$Decode$map,
+		$author$project$Models$Category$SubCategories,
+		$elm$json$Json$Decode$lazy(
+			function (_v0) {
+				return $author$project$Models$Category$cyclic$categoriesDecoder();
+			}));
+}
+try {
+	var $author$project$Models$Category$categoriesDecoder = $author$project$Models$Category$cyclic$categoriesDecoder();
+	$author$project$Models$Category$cyclic$categoriesDecoder = function () {
+		return $author$project$Models$Category$categoriesDecoder;
+	};
+	var $author$project$Models$Category$categoryDecoder = $author$project$Models$Category$cyclic$categoryDecoder();
+	$author$project$Models$Category$cyclic$categoryDecoder = function () {
+		return $author$project$Models$Category$categoryDecoder;
+	};
+	var $author$project$Models$Category$subCategoriesDecoder = $author$project$Models$Category$cyclic$subCategoriesDecoder();
+	$author$project$Models$Category$cyclic$subCategoriesDecoder = function () {
+		return $author$project$Models$Category$subCategoriesDecoder;
+	};
+} catch ($) {
+	throw 'Some top-level definitions from `Models.Category` are causing infinite recursion:\n\n  ┌─────┐\n  │    categoriesDecoder\n  │     ↓\n  │    categoryDecoder\n  │     ↓\n  │    subCategoriesDecoder\n  └─────┘\n\nThese errors are very tricky, so read https://elm-lang.org/0.19.1/bad-recursion to learn how to fix it!';}
 var $elm$http$Http$BadStatus_ = F2(
 	function (a, b) {
 		return {$: 'BadStatus_', a: a, b: b};
@@ -11069,13 +10929,22 @@ var $elm$http$Http$expectJson = F2(
 						A2($elm$json$Json$Decode$decodeString, decoder, string));
 				}));
 	});
-var $elm$http$Http$jsonBody = function (value) {
-	return A2(
-		_Http_pair,
-		'application/json',
-		A2($elm$json$Json$Encode$encode, 0, value));
+var $krisajenkins$remotedata$RemoteData$Failure = function (a) {
+	return {$: 'Failure', a: a};
 };
-var $elm$browser$Browser$Navigation$load = _Browser_load;
+var $krisajenkins$remotedata$RemoteData$Success = function (a) {
+	return {$: 'Success', a: a};
+};
+var $krisajenkins$remotedata$RemoteData$fromResult = function (result) {
+	if (result.$ === 'Err') {
+		var e = result.a;
+		return $krisajenkins$remotedata$RemoteData$Failure(e);
+	} else {
+		var x = result.a;
+		return $krisajenkins$remotedata$RemoteData$Success(x);
+	}
+};
+var $elm$http$Http$emptyBody = _Http_emptyBody;
 var $elm$http$Http$Request = function (a) {
 	return {$: 'Request', a: a};
 };
@@ -11226,6 +11095,317 @@ var $elm$http$Http$request = function (r) {
 		$elm$http$Http$Request(
 			{allowCookiesFromOtherDomains: false, body: r.body, expect: r.expect, headers: r.headers, method: r.method, timeout: r.timeout, tracker: r.tracker, url: r.url}));
 };
+var $elm$http$Http$get = function (r) {
+	return $elm$http$Http$request(
+		{body: $elm$http$Http$emptyBody, expect: r.expect, headers: _List_Nil, method: 'GET', timeout: $elm$core$Maybe$Nothing, tracker: $elm$core$Maybe$Nothing, url: r.url});
+};
+var $author$project$Page$Categories$getCategories = $elm$http$Http$get(
+	{
+		expect: A2(
+			$elm$http$Http$expectJson,
+			A2($elm$core$Basics$composeR, $krisajenkins$remotedata$RemoteData$fromResult, $author$project$Page$Categories$CategoriesResponse),
+			$author$project$Models$Category$categoriesDecoder),
+		url: 'qsub/api/categories/'
+	});
+var $author$project$Main$initCurrentPage = function (_v0) {
+	var model = _v0.a;
+	var existingCmds = _v0.b;
+	var _v1 = function () {
+		var _v2 = model.route;
+		switch (_v2.$) {
+			case 'NotFound':
+				return _Utils_Tuple2($author$project$Main$NotFoundPage, $elm$core$Platform$Cmd$none);
+			case 'Home':
+				return _Utils_Tuple2($author$project$Main$HomePage, $elm$core$Platform$Cmd$none);
+			case 'Login':
+				return _Utils_Tuple2($author$project$Main$LoginPage, $elm$core$Platform$Cmd$none);
+			case 'Register':
+				return _Utils_Tuple2($author$project$Main$RegisterPage, $elm$core$Platform$Cmd$none);
+			default:
+				return _Utils_Tuple2(
+					$author$project$Main$CategoriesPage,
+					A2($elm$core$Platform$Cmd$map, $author$project$Main$CategoriesPageMsg, $author$project$Page$Categories$getCategories));
+		}
+	}();
+	var currentPage = _v1.a;
+	var mappedPageCmds = _v1.b;
+	return _Utils_Tuple2(
+		_Utils_update(
+			model,
+			{page: currentPage}),
+		$elm$core$Platform$Cmd$batch(
+			_List_fromArray(
+				[existingCmds, mappedPageCmds])));
+};
+var $elm$core$Debug$log = _Debug_log;
+var $author$project$Route$NotFound = {$: 'NotFound'};
+var $author$project$Route$Categories = {$: 'Categories'};
+var $author$project$Route$Home = {$: 'Home'};
+var $author$project$Route$Login = {$: 'Login'};
+var $author$project$Route$Register = {$: 'Register'};
+var $elm$url$Url$Parser$Parser = function (a) {
+	return {$: 'Parser', a: a};
+};
+var $elm$url$Url$Parser$State = F5(
+	function (visited, unvisited, params, frag, value) {
+		return {frag: frag, params: params, unvisited: unvisited, value: value, visited: visited};
+	});
+var $elm$url$Url$Parser$mapState = F2(
+	function (func, _v0) {
+		var visited = _v0.visited;
+		var unvisited = _v0.unvisited;
+		var params = _v0.params;
+		var frag = _v0.frag;
+		var value = _v0.value;
+		return A5(
+			$elm$url$Url$Parser$State,
+			visited,
+			unvisited,
+			params,
+			frag,
+			func(value));
+	});
+var $elm$url$Url$Parser$map = F2(
+	function (subValue, _v0) {
+		var parseArg = _v0.a;
+		return $elm$url$Url$Parser$Parser(
+			function (_v1) {
+				var visited = _v1.visited;
+				var unvisited = _v1.unvisited;
+				var params = _v1.params;
+				var frag = _v1.frag;
+				var value = _v1.value;
+				return A2(
+					$elm$core$List$map,
+					$elm$url$Url$Parser$mapState(value),
+					parseArg(
+						A5($elm$url$Url$Parser$State, visited, unvisited, params, frag, subValue)));
+			});
+	});
+var $elm$url$Url$Parser$oneOf = function (parsers) {
+	return $elm$url$Url$Parser$Parser(
+		function (state) {
+			return A2(
+				$elm$core$List$concatMap,
+				function (_v0) {
+					var parser = _v0.a;
+					return parser(state);
+				},
+				parsers);
+		});
+};
+var $elm$url$Url$Parser$s = function (str) {
+	return $elm$url$Url$Parser$Parser(
+		function (_v0) {
+			var visited = _v0.visited;
+			var unvisited = _v0.unvisited;
+			var params = _v0.params;
+			var frag = _v0.frag;
+			var value = _v0.value;
+			if (!unvisited.b) {
+				return _List_Nil;
+			} else {
+				var next = unvisited.a;
+				var rest = unvisited.b;
+				return _Utils_eq(next, str) ? _List_fromArray(
+					[
+						A5(
+						$elm$url$Url$Parser$State,
+						A2($elm$core$List$cons, next, visited),
+						rest,
+						params,
+						frag,
+						value)
+					]) : _List_Nil;
+			}
+		});
+};
+var $elm$url$Url$Parser$top = $elm$url$Url$Parser$Parser(
+	function (state) {
+		return _List_fromArray(
+			[state]);
+	});
+var $author$project$Route$matchRoute = $elm$url$Url$Parser$oneOf(
+	_List_fromArray(
+		[
+			A2($elm$url$Url$Parser$map, $author$project$Route$Home, $elm$url$Url$Parser$top),
+			A2(
+			$elm$url$Url$Parser$map,
+			$author$project$Route$Login,
+			$elm$url$Url$Parser$s('login')),
+			A2(
+			$elm$url$Url$Parser$map,
+			$author$project$Route$Register,
+			$elm$url$Url$Parser$s('register')),
+			A2(
+			$elm$url$Url$Parser$map,
+			$author$project$Route$Categories,
+			$elm$url$Url$Parser$s('categories'))
+		]));
+var $elm$url$Url$Parser$getFirstMatch = function (states) {
+	getFirstMatch:
+	while (true) {
+		if (!states.b) {
+			return $elm$core$Maybe$Nothing;
+		} else {
+			var state = states.a;
+			var rest = states.b;
+			var _v1 = state.unvisited;
+			if (!_v1.b) {
+				return $elm$core$Maybe$Just(state.value);
+			} else {
+				if ((_v1.a === '') && (!_v1.b.b)) {
+					return $elm$core$Maybe$Just(state.value);
+				} else {
+					var $temp$states = rest;
+					states = $temp$states;
+					continue getFirstMatch;
+				}
+			}
+		}
+	}
+};
+var $elm$url$Url$Parser$removeFinalEmpty = function (segments) {
+	if (!segments.b) {
+		return _List_Nil;
+	} else {
+		if ((segments.a === '') && (!segments.b.b)) {
+			return _List_Nil;
+		} else {
+			var segment = segments.a;
+			var rest = segments.b;
+			return A2(
+				$elm$core$List$cons,
+				segment,
+				$elm$url$Url$Parser$removeFinalEmpty(rest));
+		}
+	}
+};
+var $elm$url$Url$Parser$preparePath = function (path) {
+	var _v0 = A2($elm$core$String$split, '/', path);
+	if (_v0.b && (_v0.a === '')) {
+		var segments = _v0.b;
+		return $elm$url$Url$Parser$removeFinalEmpty(segments);
+	} else {
+		var segments = _v0;
+		return $elm$url$Url$Parser$removeFinalEmpty(segments);
+	}
+};
+var $elm$url$Url$Parser$addToParametersHelp = F2(
+	function (value, maybeList) {
+		if (maybeList.$ === 'Nothing') {
+			return $elm$core$Maybe$Just(
+				_List_fromArray(
+					[value]));
+		} else {
+			var list = maybeList.a;
+			return $elm$core$Maybe$Just(
+				A2($elm$core$List$cons, value, list));
+		}
+	});
+var $elm$url$Url$percentDecode = _Url_percentDecode;
+var $elm$url$Url$Parser$addParam = F2(
+	function (segment, dict) {
+		var _v0 = A2($elm$core$String$split, '=', segment);
+		if ((_v0.b && _v0.b.b) && (!_v0.b.b.b)) {
+			var rawKey = _v0.a;
+			var _v1 = _v0.b;
+			var rawValue = _v1.a;
+			var _v2 = $elm$url$Url$percentDecode(rawKey);
+			if (_v2.$ === 'Nothing') {
+				return dict;
+			} else {
+				var key = _v2.a;
+				var _v3 = $elm$url$Url$percentDecode(rawValue);
+				if (_v3.$ === 'Nothing') {
+					return dict;
+				} else {
+					var value = _v3.a;
+					return A3(
+						$elm$core$Dict$update,
+						key,
+						$elm$url$Url$Parser$addToParametersHelp(value),
+						dict);
+				}
+			}
+		} else {
+			return dict;
+		}
+	});
+var $elm$url$Url$Parser$prepareQuery = function (maybeQuery) {
+	if (maybeQuery.$ === 'Nothing') {
+		return $elm$core$Dict$empty;
+	} else {
+		var qry = maybeQuery.a;
+		return A3(
+			$elm$core$List$foldr,
+			$elm$url$Url$Parser$addParam,
+			$elm$core$Dict$empty,
+			A2($elm$core$String$split, '&', qry));
+	}
+};
+var $elm$url$Url$Parser$parse = F2(
+	function (_v0, url) {
+		var parser = _v0.a;
+		return $elm$url$Url$Parser$getFirstMatch(
+			parser(
+				A5(
+					$elm$url$Url$Parser$State,
+					_List_Nil,
+					$elm$url$Url$Parser$preparePath(url.path),
+					$elm$url$Url$Parser$prepareQuery(url.query),
+					url.fragment,
+					$elm$core$Basics$identity)));
+	});
+var $author$project$Route$parseUrl = function (url) {
+	var _v0 = A2($elm$url$Url$Parser$parse, $author$project$Route$matchRoute, url);
+	if (_v0.$ === 'Just') {
+		var route = _v0.a;
+		return A2($elm$core$Debug$log, url.path, route);
+	} else {
+		return A2($elm$core$Debug$log, 'path: ' + url.path, $author$project$Route$NotFound);
+	}
+};
+var $elm$core$Debug$toString = _Debug_toString;
+var $author$project$Main$init = F3(
+	function (flags, url, navKey) {
+		var model = {
+			categoriesModel: {categories: $krisajenkins$remotedata$RemoteData$NotAsked, selectedCategory: $elm$core$Maybe$Nothing},
+			navKey: navKey,
+			page: $author$project$Main$HomePage,
+			route: $author$project$Route$parseUrl(url),
+			user: {password: '', token: '', username: ''}
+		};
+		return A3(
+			$elm$core$Debug$log,
+			$elm$core$Debug$toString(flags),
+			$author$project$Main$initCurrentPage,
+			_Utils_Tuple2(model, $elm$core$Platform$Cmd$none));
+	});
+var $elm$core$Platform$Sub$batch = _Platform_batch;
+var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
+var $author$project$Main$AuthResponseMsg = function (a) {
+	return {$: 'AuthResponseMsg', a: a};
+};
+var $author$project$Main$encodeUser = function (user) {
+	return $elm$json$Json$Encode$object(
+		_List_fromArray(
+			[
+				_Utils_Tuple2(
+				'username',
+				$elm$json$Json$Encode$string(user.username)),
+				_Utils_Tuple2(
+				'password',
+				$elm$json$Json$Encode$string(user.password))
+			]));
+};
+var $elm$http$Http$jsonBody = function (value) {
+	return A2(
+		_Http_pair,
+		'application/json',
+		A2($elm$json$Json$Encode$encode, 0, value));
+};
+var $elm$browser$Browser$Navigation$load = _Browser_load;
 var $elm$http$Http$post = function (r) {
 	return $elm$http$Http$request(
 		{body: r.body, expect: r.expect, headers: _List_Nil, method: 'POST', timeout: $elm$core$Maybe$Nothing, tracker: $elm$core$Maybe$Nothing, url: r.url});
@@ -11276,6 +11456,19 @@ var $elm$url$Url$toString = function (url) {
 				url.path)));
 };
 var $author$project$Main$tokenDecoder = A2($elm$json$Json$Decode$field, 'token', $elm$json$Json$Decode$string);
+var $author$project$Page$Categories$update = F2(
+	function (msg, model) {
+		if (msg.$ === 'CategoriesResponse') {
+			var response = msg.a;
+			return _Utils_Tuple2(
+				_Utils_update(
+					model,
+					{categories: response}),
+				$elm$core$Platform$Cmd$none);
+		} else {
+			return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+		}
+	});
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		var _v0 = _Utils_Tuple2(msg, model.page);
@@ -11355,6 +11548,24 @@ var $author$project$Main$update = F2(
 				var result = _v0.a.a;
 				var _v7 = A2($elm$core$Debug$log, 'result', result);
 				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+			case 'CategoriesPageMsg':
+				var categories = _v0.a.a;
+				if (categories.$ === 'CategoriesResponse') {
+					var response = categories.a;
+					var _v9 = A2(
+						$author$project$Page$Categories$update,
+						$author$project$Page$Categories$CategoriesResponse(response),
+						model.categoriesModel);
+					var updatedCategoriesModel = _v9.a;
+					var cmd = _v9.b;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{categoriesModel: updatedCategoriesModel}),
+						A2($elm$core$Platform$Cmd$map, $author$project$Main$CategoriesPageMsg, cmd));
+				} else {
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				}
 			default:
 				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 		}
@@ -11417,7 +11628,7 @@ var $author$project$Main$homePageView = A2(
 							_List_fromArray(
 								[
 									$elm$html$Html$Attributes$class('nav-link'),
-									$elm$html$Html$Attributes$href('sets')
+									$elm$html$Html$Attributes$href('/sets')
 								]),
 							_List_fromArray(
 								[
@@ -11437,7 +11648,7 @@ var $author$project$Main$homePageView = A2(
 							_List_fromArray(
 								[
 									$elm$html$Html$Attributes$class('nav-link'),
-									$elm$html$Html$Attributes$href('distributions')
+									$elm$html$Html$Attributes$href('/distributions')
 								]),
 							_List_fromArray(
 								[
@@ -11457,7 +11668,7 @@ var $author$project$Main$homePageView = A2(
 							_List_fromArray(
 								[
 									$elm$html$Html$Attributes$class('nav-link'),
-									$elm$html$Html$Attributes$href('categories')
+									$elm$html$Html$Attributes$href('/categories')
 								]),
 							_List_fromArray(
 								[
@@ -11816,6 +12027,239 @@ var $author$project$Main$notFoundView = A2(
 				])),
 			$elm$html$Html$text('oh noes asdfasd')
 		]));
+var $author$project$Page$Categories$headerView = A2(
+	$elm$html$Html$header,
+	_List_fromArray(
+		[
+			$elm$html$Html$Attributes$class('header header-6')
+		]),
+	_List_fromArray(
+		[
+			A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('branding')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$a,
+					_List_Nil,
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$span,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('title')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('QEMS3')
+								]))
+						]))
+				])),
+			A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('header-nav')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$a,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('nav-link'),
+							$elm$html$Html$Attributes$href('/sets')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$span,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('nav-text')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Sets')
+								]))
+						])),
+					A2(
+					$elm$html$Html$a,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('nav-link'),
+							$elm$html$Html$Attributes$href('/distributions')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$span,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('nav-text')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Distributions')
+								]))
+						])),
+					A2(
+					$elm$html$Html$a,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('nav-link'),
+							$elm$html$Html$Attributes$href('/categories')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$span,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('nav-text')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Categories')
+								]))
+						]))
+				])),
+			A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('header-actions')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$a,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('nav-link nav-icon'),
+							$elm$html$Html$Attributes$href('login')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('Login')
+						])),
+					A2(
+					$elm$html$Html$a,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('nav-link nav-icon')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('Register')
+						]))
+				]))
+		]));
+var $elm$html$Html$nav = _VirtualDom_node('nav');
+var $author$project$Page$Categories$viewSidebarCategory = function (category) {
+	return A3(
+		$elm$html$Html$node,
+		'clr-tree-node',
+		_List_Nil,
+		_Utils_ap(
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('clr-tree-node-content-container')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$div,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('clr-treenode-content')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text(category.name)
+								]))
+						]))
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('clr-treenode-children')
+						]),
+					function () {
+						var _v0 = category.subcategories;
+						var subcategories = _v0.a;
+						return A2($elm$core$List$map, $author$project$Page$Categories$viewSidebarCategory, subcategories);
+					}())
+				])));
+};
+var $author$project$Page$Categories$viewSidebar = function (model) {
+	return A2(
+		$elm$html$Html$nav,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$class('sidenav')
+			]),
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$section,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('sidenav-content')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$section,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('nav-group')
+							]),
+						_List_fromArray(
+							[
+								A3(
+								$elm$html$Html$node,
+								'clr-tree',
+								_List_Nil,
+								function () {
+									var _v0 = model.categories;
+									if (_v0.$ === 'Success') {
+										var categories = _v0.a;
+										return A2($elm$core$List$map, $author$project$Page$Categories$viewSidebarCategory, categories);
+									} else {
+										return _List_Nil;
+									}
+								}())
+							]))
+					]))
+			]));
+};
+var $author$project$Page$Categories$view = function (model) {
+	var _v0 = A2($elm$core$Debug$log, 'categories model', model);
+	return A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$class('main-container')
+			]),
+		_List_fromArray(
+			[
+				$author$project$Page$Categories$headerView,
+				$author$project$Page$Categories$viewSidebar(model)
+			]));
+};
 var $author$project$Main$currentView = function (model) {
 	var _v0 = model.page;
 	switch (_v0.$) {
@@ -11823,6 +12267,11 @@ var $author$project$Main$currentView = function (model) {
 			return $author$project$Main$homePageView;
 		case 'LoginPage':
 			return A2($elm$html$Html$map, $author$project$Main$LoginPageMsg, $author$project$Page$Login$loginPageView);
+		case 'CategoriesPage':
+			return A2(
+				$elm$html$Html$map,
+				$author$project$Main$CategoriesPageMsg,
+				$author$project$Page$Categories$view(model.categoriesModel));
 		default:
 			return $author$project$Main$notFoundView;
 	}
@@ -11854,4 +12303,4 @@ _Platform_export({'Main':{'init':$author$project$Main$main(
 			return $elm$json$Json$Decode$succeed(
 				{csrftoken: csrftoken});
 		},
-		A2($elm$json$Json$Decode$field, 'csrftoken', $elm$json$Json$Decode$string)))({"versions":{"elm":"0.19.1"},"types":{"message":"Main.Msg","aliases":{"Url.Url":{"args":[],"type":"{ protocol : Url.Protocol, host : String.String, port_ : Maybe.Maybe Basics.Int, path : String.String, query : Maybe.Maybe String.String, fragment : Maybe.Maybe String.String }"}},"unions":{"Main.Msg":{"args":[],"tags":{"LoginPageMsg":["Page.Login.Msg"],"RegisterPageMsg":[],"LinkClicked":["Browser.UrlRequest"],"UrlChanged":["Url.Url"],"AuthResponseMsg":["Result.Result Http.Error String.String"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Basics.Int"],"BadBody":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Page.Login.Msg":{"args":[],"tags":{"LogInSuccess":[],"LogInFailure":[],"SetUsername":["String.String"],"SetPassword":["String.String"],"SubmitLogIn":[]}},"Url.Protocol":{"args":[],"tags":{"Http":[],"Https":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"String.String":{"args":[],"tags":{"String":[]}},"Browser.UrlRequest":{"args":[],"tags":{"Internal":["Url.Url"],"External":["String.String"]}}}}})}});}(this));
+		A2($elm$json$Json$Decode$field, 'csrftoken', $elm$json$Json$Decode$string)))({"versions":{"elm":"0.19.1"},"types":{"message":"Main.Msg","aliases":{"Url.Url":{"args":[],"type":"{ protocol : Url.Protocol, host : String.String, port_ : Maybe.Maybe Basics.Int, path : String.String, query : Maybe.Maybe String.String, fragment : Maybe.Maybe String.String }"},"Page.Categories.Categories":{"args":[],"type":"List.List Models.Category.Category"},"Models.Category.Category":{"args":[],"type":"{ id : Models.Category.CategoryId, name : String.String, description : String.String, parentCategory : Models.Category.CategoryId, subcategories : Models.Category.SubCategories }"},"RemoteData.WebData":{"args":["a"],"type":"RemoteData.RemoteData Http.Error a"}},"unions":{"Main.Msg":{"args":[],"tags":{"LoginPageMsg":["Page.Login.Msg"],"CategoriesPageMsg":["Page.Categories.Msg"],"RegisterPageMsg":[],"LinkClicked":["Browser.UrlRequest"],"UrlChanged":["Url.Url"],"AuthResponseMsg":["Result.Result Http.Error String.String"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Basics.Int"],"BadBody":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Page.Categories.Msg":{"args":[],"tags":{"ListCategories":[],"CategoriesResponse":["RemoteData.WebData Page.Categories.Categories"],"ShowCategoryDetail":["Models.Category.Category"]}},"Page.Login.Msg":{"args":[],"tags":{"LogInSuccess":[],"LogInFailure":[],"SetUsername":["String.String"],"SetPassword":["String.String"],"SubmitLogIn":[]}},"Url.Protocol":{"args":[],"tags":{"Http":[],"Https":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"String.String":{"args":[],"tags":{"String":[]}},"Browser.UrlRequest":{"args":[],"tags":{"Internal":["Url.Url"],"External":["String.String"]}},"Models.Category.CategoryId":{"args":[],"tags":{"CategoryId":["Maybe.Maybe Basics.Int"]}},"List.List":{"args":["a"],"tags":{}},"RemoteData.RemoteData":{"args":["e","a"],"tags":{"NotAsked":[],"Loading":[],"Failure":["e"],"Success":["a"]}},"Models.Category.SubCategories":{"args":[],"tags":{"SubCategories":["List.List Models.Category.Category"]}}}}})}});}(this));

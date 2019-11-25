@@ -9,8 +9,10 @@ import Http exposing (post, expectJson, expectString, Error)
 import Route exposing (Route)
 import Url exposing (Url)
 import Page.Login as Login
+import Page.Categories as Categories
 import Json.Encode as Encode exposing (..)
 import Json.Decode as Decode exposing (Decoder, list, string)
+import RemoteData exposing (..)
 
 
 type alias User =
@@ -24,6 +26,7 @@ type alias Model =
     , page : Page
     , navKey : Nav.Key
     , user : User
+    , categoriesModel : Categories.Model
     }
 
 type alias Flags =
@@ -41,6 +44,7 @@ type Page
 
 type Msg
     = LoginPageMsg Login.Msg
+    | CategoriesPageMsg Categories.Msg
     | RegisterPageMsg
     | LinkClicked UrlRequest
     | UrlChanged Url
@@ -59,6 +63,8 @@ currentView model =
     case model.page of
         HomePage -> homePageView
         LoginPage -> Login.loginPageView |> Html.map LoginPageMsg
+        CategoriesPage -> Categories.view model.categoriesModel |> Html.map CategoriesPageMsg
+        -- CategoriesPage -> 
         _ -> notFoundView
 
 main =
@@ -83,6 +89,9 @@ init flags url navKey =
                      , password = ""
                      , token = ""
                      }
+            , categoriesModel = { categories = NotAsked
+                                , selectedCategory = Nothing
+                                }
             }
     in
         Debug.log (Debug.toString flags)
@@ -150,6 +159,25 @@ update msg model =
             in
                 ( model, Cmd.none )
 
+        ( CategoriesPageMsg categories, _ ) ->
+            case categories of
+                Categories.CategoriesResponse response ->
+                    let
+                        ( updatedCategoriesModel, cmd ) =
+                            Categories.update (Categories.CategoriesResponse response) model.categoriesModel
+                    in
+                        ( { model | categoriesModel = updatedCategoriesModel }, cmd |> Cmd.map CategoriesPageMsg )
+                
+                -- Categories.CategoriesResponse response ->
+                --     let
+                --         _ = Debug.log "response" response
+                --     in
+                --         ( model, Cmd.none )
+                _ ->
+                    ( model, Cmd.none )
+                -- ( model, Categories.getCategories |> Cmd.map CategoriesPageMsg )
+
+                    
         ( _, _ ) ->
             ( model, Cmd.none )
 
@@ -163,6 +191,7 @@ initCurrentPage ( model, existingCmds ) =
                 Route.Home -> ( HomePage, Cmd.none )
                 Route.Login -> ( LoginPage, Cmd.none )
                 Route.Register -> ( RegisterPage, Cmd.none )
+                Route.Categories -> ( CategoriesPage, Categories.getCategories |> Cmd.map CategoriesPageMsg )
     in
         ( { model | page = currentPage }
         , Cmd.batch [ existingCmds, mappedPageCmds ]
@@ -176,11 +205,11 @@ homePageView =
               [ div [ class "branding" ]
                     [ a [] [ span [ class "title" ] [ text "QEMS3" ] ] ]
               , div [ class "header-nav" ]
-                  [ a [ class "nav-link", href "sets" ]
+                  [ a [ class "nav-link", href "/sets" ]
                         [ span [ class "nav-text" ] [ text "Sets" ] ]
-                  , a [ class "nav-link", href "distributions" ]
+                  , a [ class "nav-link", href "/distributions" ]
                       [ span [ class "nav-text" ] [ text "Distributions" ] ]
-                  , a [ class "nav-link", href "categories" ]
+                  , a [ class "nav-link", href "/categories" ]
                       [ span [ class "nav-text" ] [ text "Categories" ] ]
                   ]
               , div [ class "header-actions" ]

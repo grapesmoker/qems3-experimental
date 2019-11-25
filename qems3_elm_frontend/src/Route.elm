@@ -7,6 +7,7 @@ type Route
     = Home
     | Login
     | Register
+    | Categories
     | NotFound
 
 
@@ -27,5 +28,6 @@ matchRoute =
     oneOf [ map Home top
           , map Login (s "login")
           , map Register (s "register")
+          , map Categories (s "categories")
           ]
         
