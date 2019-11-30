@@ -8,6 +8,7 @@ type Route
     | Login
     | Register
     | Categories
+    | Category Int
     | NotFound
 
 
@@ -29,5 +30,6 @@ matchRoute =
           , map Login (s "login")
           , map Register (s "register")
           , map Categories (s "categories")
+          , map Category (s "categories" </> int)
           ]
         

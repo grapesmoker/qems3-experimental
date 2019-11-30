@@ -1,4 +1,4 @@
-module Page.Categories exposing (Model, Msg(..), init, update, view, getCategories)
+module Page.Categories exposing (Model, Msg(..), init, update, view, getCategory, getCategories)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -6,7 +6,7 @@ import Html.Events exposing (onClick)
 import Http exposing (expectJson)
 import Json.Decode as Decode
 import Json.Decode.Pipeline exposing (required, optional, hardcoded)
-import Models.Category exposing (Category, CategoryId, categoriesDecoder)
+import Models.Category exposing (Category, CategoryId, categoryDecoder, categoriesDecoder)
 import RemoteData exposing (..)
 
 type alias Categories =
@@ -14,12 +14,13 @@ type alias Categories =
 
 type alias Model =
     { categories : WebData (List Category)
-    , selectedCategory : Maybe Category
+    , selectedCategory : WebData Category
     }
 
 type Msg
     = ListCategories
     | CategoriesResponse (WebData Categories)
+    | CategoryResponse (WebData Category)
     | ShowCategoryDetail Category
 
 view : Model -> Html Msg
@@ -29,13 +30,16 @@ view model =
     in
         div [ class "main-container" ]
             [ headerView
-            , viewSidebar model
+            , div [ class "content-container" ]
+                [ (viewSidebar model)
+                , div [ class "content-area" ] [ ( viewCategory model ) ]
+                ]
             ]
 
 
 headerView : Html Msg
 headerView =
-    header [ class "header header-6"]
+    header [ class "header-6"]
         [ div [ class "branding" ]
               [ a [] [ span [ class "title" ] [ text "QEMS3" ] ] ]
         , div [ class "header-nav" ]
@@ -47,8 +51,8 @@ headerView =
                 [ span [ class "nav-text" ] [ text "Categories" ] ]
             ]
         , div [ class "header-actions" ]
-            [ a [ class "nav-link nav-icon", href "login" ] [ text "Login" ]
-            , a [ class "nav-link nav-icon" ] [ text "Register" ]
+            [ a [ class "nav-link nav-icon", href "/login" ] [ text "Login" ]
+            , a [ class "nav-link nav-icon", href "/register" ] [ text "Register" ]
             ]
         ]
         
@@ -77,7 +81,15 @@ viewSidebarCategory category =
      (
       [ div [ class "clr-tree-node-content-container" ] 
         [ div [ class "clr-treenode-content" ]
-          [ text category.name ]
+          [ a [ class "clr-treenode-link", href
+                    ( case category.id of
+                          Just id ->
+                              "/categories/" ++ (String.fromInt id)
+                          Nothing ->
+                              "#"
+                          )
+              ] [ text category.name ]
+          ]
         ]
       ]
           
@@ -88,6 +100,48 @@ viewSidebarCategory category =
             )
           ]
     )
+
+viewCategory : Model -> Html Msg
+viewCategory model =
+    case model.selectedCategory of
+        Success category ->
+            Html.form [ class "clr-form" ]
+                [ div [ class "clr-form-control" ]
+                  [ label [ for "category-name", class "clr-control-label" ]
+                    [ text "Category name" ]
+                  , div [ class "clr-control-container" ]
+                      [ div [ class "clr-input-wrapper" ]
+                        [ input [ type_ "text", id "category-name", placeholder "Name", class "clr-input"
+                                , value category.name
+                                ]
+                              [ Html.node "clr-icon" [ class "clr-validate-icon" ] [] ]
+                        ]
+                      ]
+                  ]
+                , div [class "clr-form-control" ]
+                    [ label [ for "category-description", class "clr-control-label" ]
+                      [ text "Description" ]
+                    , div [ class "clr-control-container" ]
+                        [ div [ class "clr-input-wrapper" ]
+                          [ input [ type_ "textarea", id "category-description"
+                                  , placeholder "Description", class "clr-textarea", value category.description
+                                  ] []
+                          ]
+                        ]
+                    ]
+                , div [class "clr-form-control" ]
+                    [ label [ for "category-parent", class "clr-control-label" ]
+                      [ text "Parent category" ]
+                    , div [ class "clr-control-container" ]
+                        [ div [ class "clr-input-wrapper" ]
+                          [ select [ id "category-parent", class "clr-select", value category.description ]
+                            []
+                          ]
+                        ]
+                    ]
+                    
+                ]
+        _ -> Html.div [] []
         
         
 getCategories : Cmd Msg
@@ -97,10 +151,17 @@ getCategories =
         , expect = expectJson (RemoteData.fromResult >> CategoriesResponse) categoriesDecoder
         }
 
+getCategory : Int -> Cmd Msg
+getCategory id =
+    Http.get
+        { url = "qsub/api/categories/" ++ String.fromInt id ++ "/"
+        , expect = expectJson (RemoteData.fromResult >> CategoryResponse) categoryDecoder
+        }
+        
 init : ( Model, Cmd Msg )
 init =
     ( { categories = NotAsked
-      , selectedCategory = Nothing
+      , selectedCategory = NotAsked
       }
     , getCategories )
 
@@ -110,53 +171,7 @@ update msg model =
     case msg of
         CategoriesResponse response ->
             ( { model | categories = response }, Cmd.none )
+        CategoryResponse response ->
+            ( { model | selectedCategory = response }, Cmd.none )
         _ ->
             ( model, Cmd.none)
-
-{-
-
-[
-    {
-        "id": 1,
-        "name": "physics",
-        "description": "physics",
-        "parent_category": null,
-        "path": "1",
-        "subcategories": [
-            {
-                "id": 5,
-                "name": "e&m",
-                "description": "electricity and magnetism",
-                "parent_category": 1,
-                "path": "1/5",
-                "subcategories": []
-            },
-            {
-                "id": 4,
-                "name": "mechanics",
-                "description": "mech",
-                "parent_category": 1,
-                "path": "1/4",
-                "subcategories": []
-            },
-            {
-                "id": 3,
-                "name": "thermo",
-                "description": "sm",
-                "parent_category": 1,
-                "path": "1/3",
-                "subcategories": []
-            },
-            {
-                "id": 2,
-                "name": "quantum mechanics",
-                "description": "qm",
-                "parent_category": 1,
-                "path": "1/2",
-                "subcategories": []
-            }
-        ]
-    }
-]
-
--}

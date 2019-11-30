@@ -67,7 +67,12 @@ class DistributionViewSet(BaseNestedModelViewSet):
 class CategoryViewSet(BaseNestedModelViewSet):
 
     model = Category
-    queryset = Category.objects.filter(parent_category__isnull=True)
+    queryset = Category.objects.all()
     serializer_class = CategorySerializer
+
+    def list(self, request, *args, **kwargs):
+
+        self.queryset = self.queryset.filter(parent_category__isnull=True)
+        return super().list(self, request, *args, **kwargs)
 
 

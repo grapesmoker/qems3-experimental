@@ -10,6 +10,7 @@ from django.db.models.signals import post_save
 
 from rest_framework.authtoken.models import Token
 
+from qsub.api.serializers import UserSerializer
 
 @ensure_csrf_cookie
 def index(request):
@@ -40,6 +41,15 @@ def webapp_login(request):
     login(request, user)
 
     return JsonResponse(data={'status': 'OK', 'token': str(Token.objects.get(user=user))})
+
+
+def user_profile(request):
+
+    if request.user.is_authenticated:
+        user = UserSerializer(request.user)
+        return JsonResponse(user.data)
+    else:
+        return HttpResponse(None)
 
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)

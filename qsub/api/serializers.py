@@ -1,10 +1,20 @@
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework_recursive.fields import RecursiveField
+
+User = get_user_model()
+
 
 from qsub.models import (Tossup, Bonus, Packet, Distribution, DistributionEntry, DistributionPerPacket,
                          SetWideDistributionEntry, TieBreakDistributionEntry, QuestionSet,
                          QuestionType, QuestionFieldHistory, QuestionHistory, Writer, WriterQuestionSetSettings,
                          PerCategoryWriterSettings, CategoryEntry, Category)
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
 
 
 class WriterSerializer(serializers.ModelSerializer):

@@ -89,7 +89,7 @@ init flags url navKey =
                      , token = ""
                      }
             , categoriesModel = { categories = NotAsked
-                                , selectedCategory = Nothing
+                                , selectedCategory = NotAsked
                                 }
             }
     in
@@ -193,6 +193,10 @@ initCurrentPage ( model, existingCmds ) =
                 Route.Login -> ( LoginPage, Cmd.none )
                 Route.Register -> ( RegisterPage, Cmd.none )
                 Route.Categories -> ( CategoriesPage, Categories.getCategories |> Cmd.map CategoriesPageMsg )
+                Route.Category category -> ( CategoriesPage,
+                                                 Cmd.batch [ Categories.getCategory category
+                                                           , Categories.getCategories ]
+                                           |> Cmd.map CategoriesPageMsg )
     in
         ( { model | page = currentPage }
         , Cmd.batch [ existingCmds, mappedPageCmds ]

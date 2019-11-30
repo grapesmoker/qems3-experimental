@@ -10809,7 +10809,7 @@ function $author$project$Models$Category$cyclic$categoryDecoder() {
 					A3(
 						$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 						'id',
-						$author$project$Models$Category$idDecoder,
+						$elm$json$Json$Decode$nullable($elm$json$Json$Decode$int),
 						$elm$json$Json$Decode$succeed($author$project$Models$Category$Category))))));
 }
 function $author$project$Models$Category$cyclic$subCategoriesDecoder() {
@@ -11107,6 +11107,19 @@ var $author$project$Page$Categories$getCategories = $elm$http$Http$get(
 			$author$project$Models$Category$categoriesDecoder),
 		url: 'qsub/api/categories/'
 	});
+var $author$project$Page$Categories$CategoryResponse = function (a) {
+	return {$: 'CategoryResponse', a: a};
+};
+var $author$project$Page$Categories$getCategory = function (id) {
+	return $elm$http$Http$get(
+		{
+			expect: A2(
+				$elm$http$Http$expectJson,
+				A2($elm$core$Basics$composeR, $krisajenkins$remotedata$RemoteData$fromResult, $author$project$Page$Categories$CategoryResponse),
+				$author$project$Models$Category$categoryDecoder),
+			url: 'qsub/api/categories/' + ($elm$core$String$fromInt(id) + '/')
+		});
+};
 var $author$project$Main$initCurrentPage = function (_v0) {
 	var model = _v0.a;
 	var existingCmds = _v0.b;
@@ -11121,10 +11134,23 @@ var $author$project$Main$initCurrentPage = function (_v0) {
 				return _Utils_Tuple2($author$project$Main$LoginPage, $elm$core$Platform$Cmd$none);
 			case 'Register':
 				return _Utils_Tuple2($author$project$Main$RegisterPage, $elm$core$Platform$Cmd$none);
-			default:
+			case 'Categories':
 				return _Utils_Tuple2(
 					$author$project$Main$CategoriesPage,
 					A2($elm$core$Platform$Cmd$map, $author$project$Main$CategoriesPageMsg, $author$project$Page$Categories$getCategories));
+			default:
+				var category = _v2.a;
+				return _Utils_Tuple2(
+					$author$project$Main$CategoriesPage,
+					A2(
+						$elm$core$Platform$Cmd$map,
+						$author$project$Main$CategoriesPageMsg,
+						$elm$core$Platform$Cmd$batch(
+							_List_fromArray(
+								[
+									$author$project$Page$Categories$getCategory(category),
+									$author$project$Page$Categories$getCategories
+								]))));
 		}
 	}();
 	var currentPage = _v1.a;
@@ -11140,6 +11166,9 @@ var $author$project$Main$initCurrentPage = function (_v0) {
 var $elm$core$Debug$log = _Debug_log;
 var $author$project$Route$NotFound = {$: 'NotFound'};
 var $author$project$Route$Categories = {$: 'Categories'};
+var $author$project$Route$Category = function (a) {
+	return {$: 'Category', a: a};
+};
 var $author$project$Route$Home = {$: 'Home'};
 var $author$project$Route$Login = {$: 'Login'};
 var $author$project$Route$Register = {$: 'Register'};
@@ -11150,6 +11179,40 @@ var $elm$url$Url$Parser$State = F5(
 	function (visited, unvisited, params, frag, value) {
 		return {frag: frag, params: params, unvisited: unvisited, value: value, visited: visited};
 	});
+var $elm$url$Url$Parser$custom = F2(
+	function (tipe, stringToSomething) {
+		return $elm$url$Url$Parser$Parser(
+			function (_v0) {
+				var visited = _v0.visited;
+				var unvisited = _v0.unvisited;
+				var params = _v0.params;
+				var frag = _v0.frag;
+				var value = _v0.value;
+				if (!unvisited.b) {
+					return _List_Nil;
+				} else {
+					var next = unvisited.a;
+					var rest = unvisited.b;
+					var _v2 = stringToSomething(next);
+					if (_v2.$ === 'Just') {
+						var nextValue = _v2.a;
+						return _List_fromArray(
+							[
+								A5(
+								$elm$url$Url$Parser$State,
+								A2($elm$core$List$cons, next, visited),
+								rest,
+								params,
+								frag,
+								value(nextValue))
+							]);
+					} else {
+						return _List_Nil;
+					}
+				}
+			});
+	});
+var $elm$url$Url$Parser$int = A2($elm$url$Url$Parser$custom, 'NUMBER', $elm$core$String$toInt);
 var $elm$url$Url$Parser$mapState = F2(
 	function (func, _v0) {
 		var visited = _v0.visited;
@@ -11220,6 +11283,18 @@ var $elm$url$Url$Parser$s = function (str) {
 			}
 		});
 };
+var $elm$url$Url$Parser$slash = F2(
+	function (_v0, _v1) {
+		var parseBefore = _v0.a;
+		var parseAfter = _v1.a;
+		return $elm$url$Url$Parser$Parser(
+			function (state) {
+				return A2(
+					$elm$core$List$concatMap,
+					parseAfter,
+					parseBefore(state));
+			});
+	});
 var $elm$url$Url$Parser$top = $elm$url$Url$Parser$Parser(
 	function (state) {
 		return _List_fromArray(
@@ -11240,7 +11315,14 @@ var $author$project$Route$matchRoute = $elm$url$Url$Parser$oneOf(
 			A2(
 			$elm$url$Url$Parser$map,
 			$author$project$Route$Categories,
-			$elm$url$Url$Parser$s('categories'))
+			$elm$url$Url$Parser$s('categories')),
+			A2(
+			$elm$url$Url$Parser$map,
+			$author$project$Route$Category,
+			A2(
+				$elm$url$Url$Parser$slash,
+				$elm$url$Url$Parser$s('categories'),
+				$elm$url$Url$Parser$int))
 		]));
 var $elm$url$Url$Parser$getFirstMatch = function (states) {
 	getFirstMatch:
@@ -11370,7 +11452,7 @@ var $elm$core$Debug$toString = _Debug_toString;
 var $author$project$Main$init = F3(
 	function (flags, url, navKey) {
 		var model = {
-			categoriesModel: {categories: $krisajenkins$remotedata$RemoteData$NotAsked, selectedCategory: $elm$core$Maybe$Nothing},
+			categoriesModel: {categories: $krisajenkins$remotedata$RemoteData$NotAsked, selectedCategory: $krisajenkins$remotedata$RemoteData$NotAsked},
 			navKey: navKey,
 			page: $author$project$Main$HomePage,
 			route: $author$project$Route$parseUrl(url),
@@ -11458,15 +11540,23 @@ var $elm$url$Url$toString = function (url) {
 var $author$project$Main$tokenDecoder = A2($elm$json$Json$Decode$field, 'token', $elm$json$Json$Decode$string);
 var $author$project$Page$Categories$update = F2(
 	function (msg, model) {
-		if (msg.$ === 'CategoriesResponse') {
-			var response = msg.a;
-			return _Utils_Tuple2(
-				_Utils_update(
-					model,
-					{categories: response}),
-				$elm$core$Platform$Cmd$none);
-		} else {
-			return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+		switch (msg.$) {
+			case 'CategoriesResponse':
+				var response = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{categories: response}),
+					$elm$core$Platform$Cmd$none);
+			case 'CategoryResponse':
+				var response = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{selectedCategory: response}),
+					$elm$core$Platform$Cmd$none);
+			default:
+				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 		}
 	});
 var $author$project$Main$update = F2(
@@ -12032,7 +12122,7 @@ var $author$project$Page$Categories$headerView = A2(
 	$elm$html$Html$header,
 	_List_fromArray(
 		[
-			$elm$html$Html$Attributes$class('header header-6')
+			$elm$html$Html$Attributes$class('header-6')
 		]),
 	_List_fromArray(
 		[
@@ -12143,7 +12233,7 @@ var $author$project$Page$Categories$headerView = A2(
 					_List_fromArray(
 						[
 							$elm$html$Html$Attributes$class('nav-link nav-icon'),
-							$elm$html$Html$Attributes$href('login')
+							$elm$html$Html$Attributes$href('/login')
 						]),
 					_List_fromArray(
 						[
@@ -12153,7 +12243,8 @@ var $author$project$Page$Categories$headerView = A2(
 					$elm$html$Html$a,
 					_List_fromArray(
 						[
-							$elm$html$Html$Attributes$class('nav-link nav-icon')
+							$elm$html$Html$Attributes$class('nav-link nav-icon'),
+							$elm$html$Html$Attributes$href('/register')
 						]),
 					_List_fromArray(
 						[
@@ -12161,6 +12252,180 @@ var $author$project$Page$Categories$headerView = A2(
 						]))
 				]))
 		]));
+var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
+var $elm$html$Html$select = _VirtualDom_node('select');
+var $author$project$Page$Categories$viewCategory = function (model) {
+	var _v0 = model.selectedCategory;
+	if (_v0.$ === 'Success') {
+		var category = _v0.a;
+		return A2(
+			$elm$html$Html$form,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('clr-form')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('clr-form-control')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$label,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$for('category-name'),
+									$elm$html$Html$Attributes$class('clr-control-label')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Category name')
+								])),
+							A2(
+							$elm$html$Html$div,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('clr-control-container')
+								]),
+							_List_fromArray(
+								[
+									A2(
+									$elm$html$Html$div,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$class('clr-input-wrapper')
+										]),
+									_List_fromArray(
+										[
+											A2(
+											$elm$html$Html$input,
+											_List_fromArray(
+												[
+													$elm$html$Html$Attributes$type_('text'),
+													$elm$html$Html$Attributes$id('category-name'),
+													$elm$html$Html$Attributes$placeholder('Name'),
+													$elm$html$Html$Attributes$class('clr-input'),
+													$elm$html$Html$Attributes$value(category.name)
+												]),
+											_List_fromArray(
+												[
+													A3(
+													$elm$html$Html$node,
+													'clr-icon',
+													_List_fromArray(
+														[
+															$elm$html$Html$Attributes$class('clr-validate-icon')
+														]),
+													_List_Nil)
+												]))
+										]))
+								]))
+						])),
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('clr-form-control')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$label,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$for('category-description'),
+									$elm$html$Html$Attributes$class('clr-control-label')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Description')
+								])),
+							A2(
+							$elm$html$Html$div,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('clr-control-container')
+								]),
+							_List_fromArray(
+								[
+									A2(
+									$elm$html$Html$div,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$class('clr-input-wrapper')
+										]),
+									_List_fromArray(
+										[
+											A2(
+											$elm$html$Html$input,
+											_List_fromArray(
+												[
+													$elm$html$Html$Attributes$type_('textarea'),
+													$elm$html$Html$Attributes$id('category-description'),
+													$elm$html$Html$Attributes$placeholder('Description'),
+													$elm$html$Html$Attributes$class('clr-textarea'),
+													$elm$html$Html$Attributes$value(category.description)
+												]),
+											_List_Nil)
+										]))
+								]))
+						])),
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('clr-form-control')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$label,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$for('category-parent'),
+									$elm$html$Html$Attributes$class('clr-control-label')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Parent category')
+								])),
+							A2(
+							$elm$html$Html$div,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('clr-control-container')
+								]),
+							_List_fromArray(
+								[
+									A2(
+									$elm$html$Html$div,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$class('clr-input-wrapper')
+										]),
+									_List_fromArray(
+										[
+											A2(
+											$elm$html$Html$select,
+											_List_fromArray(
+												[
+													$elm$html$Html$Attributes$id('category-parent'),
+													$elm$html$Html$Attributes$class('clr-select'),
+													$elm$html$Html$Attributes$value(category.description)
+												]),
+											_List_Nil)
+										]))
+								]))
+						]))
+				]));
+	} else {
+		return A2($elm$html$Html$div, _List_Nil, _List_Nil);
+	}
+};
 var $elm$html$Html$nav = _VirtualDom_node('nav');
 var $author$project$Page$Categories$viewSidebarCategory = function (category) {
 	return A3(
@@ -12186,7 +12451,26 @@ var $author$project$Page$Categories$viewSidebarCategory = function (category) {
 								]),
 							_List_fromArray(
 								[
-									$elm$html$Html$text(category.name)
+									A2(
+									$elm$html$Html$a,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$class('clr-treenode-link'),
+											$elm$html$Html$Attributes$href(
+											function () {
+												var _v0 = category.id;
+												if (_v0.$ === 'Just') {
+													var id = _v0.a;
+													return '/categories/' + $elm$core$String$fromInt(id);
+												} else {
+													return '#';
+												}
+											}())
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text(category.name)
+										]))
 								]))
 						]))
 				]),
@@ -12199,8 +12483,8 @@ var $author$project$Page$Categories$viewSidebarCategory = function (category) {
 							$elm$html$Html$Attributes$class('clr-treenode-children')
 						]),
 					function () {
-						var _v0 = category.subcategories;
-						var subcategories = _v0.a;
+						var _v1 = category.subcategories;
+						var subcategories = _v1.a;
 						return A2($elm$core$List$map, $author$project$Page$Categories$viewSidebarCategory, subcategories);
 					}())
 				])));
@@ -12258,7 +12542,26 @@ var $author$project$Page$Categories$view = function (model) {
 		_List_fromArray(
 			[
 				$author$project$Page$Categories$headerView,
-				$author$project$Page$Categories$viewSidebar(model)
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('content-container')
+					]),
+				_List_fromArray(
+					[
+						$author$project$Page$Categories$viewSidebar(model),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('content-area')
+							]),
+						_List_fromArray(
+							[
+								$author$project$Page$Categories$viewCategory(model)
+							]))
+					]))
 			]));
 };
 var $author$project$Main$currentView = function (model) {
@@ -12304,4 +12607,4 @@ _Platform_export({'Main':{'init':$author$project$Main$main(
 			return $elm$json$Json$Decode$succeed(
 				{csrftoken: csrftoken});
 		},
-		A2($elm$json$Json$Decode$field, 'csrftoken', $elm$json$Json$Decode$string)))({"versions":{"elm":"0.19.1"},"types":{"message":"Main.Msg","aliases":{"Url.Url":{"args":[],"type":"{ protocol : Url.Protocol, host : String.String, port_ : Maybe.Maybe Basics.Int, path : String.String, query : Maybe.Maybe String.String, fragment : Maybe.Maybe String.String }"},"Page.Categories.Categories":{"args":[],"type":"List.List Models.Category.Category"},"Models.Category.Category":{"args":[],"type":"{ id : Models.Category.CategoryId, name : String.String, description : String.String, parentCategory : Models.Category.CategoryId, subcategories : Models.Category.SubCategories }"},"RemoteData.WebData":{"args":["a"],"type":"RemoteData.RemoteData Http.Error a"}},"unions":{"Main.Msg":{"args":[],"tags":{"LoginPageMsg":["Page.Login.Msg"],"CategoriesPageMsg":["Page.Categories.Msg"],"RegisterPageMsg":[],"LinkClicked":["Browser.UrlRequest"],"UrlChanged":["Url.Url"],"AuthResponseMsg":["Result.Result Http.Error String.String"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Basics.Int"],"BadBody":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Page.Categories.Msg":{"args":[],"tags":{"ListCategories":[],"CategoriesResponse":["RemoteData.WebData Page.Categories.Categories"],"ShowCategoryDetail":["Models.Category.Category"]}},"Page.Login.Msg":{"args":[],"tags":{"LogInSuccess":[],"LogInFailure":[],"SetUsername":["String.String"],"SetPassword":["String.String"],"SubmitLogIn":[]}},"Url.Protocol":{"args":[],"tags":{"Http":[],"Https":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"String.String":{"args":[],"tags":{"String":[]}},"Browser.UrlRequest":{"args":[],"tags":{"Internal":["Url.Url"],"External":["String.String"]}},"Models.Category.CategoryId":{"args":[],"tags":{"CategoryId":["Maybe.Maybe Basics.Int"]}},"List.List":{"args":["a"],"tags":{}},"RemoteData.RemoteData":{"args":["e","a"],"tags":{"NotAsked":[],"Loading":[],"Failure":["e"],"Success":["a"]}},"Models.Category.SubCategories":{"args":[],"tags":{"SubCategories":["List.List Models.Category.Category"]}}}}})}});}(this));
+		A2($elm$json$Json$Decode$field, 'csrftoken', $elm$json$Json$Decode$string)))({"versions":{"elm":"0.19.1"},"types":{"message":"Main.Msg","aliases":{"Url.Url":{"args":[],"type":"{ protocol : Url.Protocol, host : String.String, port_ : Maybe.Maybe Basics.Int, path : String.String, query : Maybe.Maybe String.String, fragment : Maybe.Maybe String.String }"},"Page.Categories.Categories":{"args":[],"type":"List.List Models.Category.Category"},"Models.Category.Category":{"args":[],"type":"{ id : Maybe.Maybe Basics.Int, name : String.String, description : String.String, parentCategory : Models.Category.CategoryId, subcategories : Models.Category.SubCategories }"},"RemoteData.WebData":{"args":["a"],"type":"RemoteData.RemoteData Http.Error a"}},"unions":{"Main.Msg":{"args":[],"tags":{"LoginPageMsg":["Page.Login.Msg"],"CategoriesPageMsg":["Page.Categories.Msg"],"RegisterPageMsg":[],"LinkClicked":["Browser.UrlRequest"],"UrlChanged":["Url.Url"],"AuthResponseMsg":["Result.Result Http.Error String.String"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Basics.Int"],"BadBody":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Page.Categories.Msg":{"args":[],"tags":{"ListCategories":[],"CategoriesResponse":["RemoteData.WebData Page.Categories.Categories"],"CategoryResponse":["RemoteData.WebData Models.Category.Category"],"ShowCategoryDetail":["Models.Category.Category"]}},"Page.Login.Msg":{"args":[],"tags":{"LogInSuccess":[],"LogInFailure":[],"SetUsername":["String.String"],"SetPassword":["String.String"],"SubmitLogIn":[]}},"Url.Protocol":{"args":[],"tags":{"Http":[],"Https":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"String.String":{"args":[],"tags":{"String":[]}},"Browser.UrlRequest":{"args":[],"tags":{"Internal":["Url.Url"],"External":["String.String"]}},"Models.Category.CategoryId":{"args":[],"tags":{"CategoryId":["Maybe.Maybe Basics.Int"]}},"List.List":{"args":["a"],"tags":{}},"RemoteData.RemoteData":{"args":["e","a"],"tags":{"NotAsked":[],"Loading":[],"Failure":["e"],"Success":["a"]}},"Models.Category.SubCategories":{"args":[],"tags":{"SubCategories":["List.List Models.Category.Category"]}}}}})}});}(this));

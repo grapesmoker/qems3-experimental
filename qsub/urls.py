@@ -26,5 +26,6 @@ categories_router = router.register(
 )
 
 urlpatterns = router.urls + [
-    url(r'webapp_login/', app_views.webapp_login, name='login')
+    url(r'webapp_login/', app_views.webapp_login, name='login'),
+    url(r'user/', app_views.user_profile, name='user')
 ]

@@ -1,4 +1,4 @@
-module Models.Category exposing (Category, SubCategories(..), CategoryId, categoryDecoder, categoriesDecoder) 
+module Models.Category exposing (Category, SubCategories(..), CategoryId(..), categoryDecoder, categoriesDecoder) 
 
 import Json.Decode as Decode exposing (Decoder, int, list, string, nullable)
 import Json.Decode.Pipeline exposing (required, optional)
@@ -11,7 +11,7 @@ type SubCategories
     = SubCategories (List Category)
 
 type alias Category =
-    { id : CategoryId
+    { id : (Maybe Int)
     , name : String
     , description : String
     , parentCategory : CategoryId
@@ -35,7 +35,7 @@ subCategoriesDecoder =
 categoryDecoder : Decoder Category
 categoryDecoder =
     Decode.succeed Category
-        |> required "id" idDecoder
+        |> required "id" (nullable int)
         |> required "name" string
         |> required "description" string
         |> required "parent_category" idDecoder
