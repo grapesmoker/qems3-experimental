@@ -2,12 +2,15 @@ module Page.Categories exposing (Model, Msg(..), init, update, view, getCategory
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick)
+import Html.Events exposing (onClick, onSubmit, onInput)
 import Http exposing (expectJson)
 import Json.Decode as Decode
 import Json.Decode.Pipeline exposing (required, optional, hardcoded)
-import Models.Category exposing (Category, CategoryId, categoryDecoder, categoriesDecoder)
+import Models.Category exposing (Category, CategoryId, SubCategories, categoryDecoder, categoriesDecoder, categoryEncoder)
+import Models.Flags exposing (Flags)
 import RemoteData exposing (..)
+import Task exposing (Task)
+
 
 type alias Categories =
     List Category
@@ -21,20 +24,21 @@ type Msg
     = ListCategories
     | CategoriesResponse (WebData Categories)
     | CategoryResponse (WebData Category)
+    | SetCategoryName String
+    | SetCategoryDescription String
+    | SetCategoryParent String
     | ShowCategoryDetail Category
+    | SaveCategoryDetail
 
 view : Model -> Html Msg
 view model =
-    let
-        _ = Debug.log "categories model" model
-    in
-        div [ class "main-container" ]
-            [ headerView
-            , div [ class "content-container" ]
-                [ (viewSidebar model)
-                , div [ class "content-area" ] [ ( viewCategory model ) ]
-                ]
+    div [ class "main-container" ]
+        [ headerView
+        , div [ class "content-container" ]
+            [ (viewSidebar model)
+            , div [ class "content-area" ] [ ( viewCategory model ) ]
             ]
+        ]
 
 
 headerView : Html Msg
@@ -81,13 +85,7 @@ viewSidebarCategory category =
      (
       [ div [ class "clr-tree-node-content-container" ] 
         [ div [ class "clr-treenode-content" ]
-          [ a [ class "clr-treenode-link", href
-                    ( case category.id of
-                          Just id ->
-                              "/categories/" ++ (String.fromInt id)
-                          Nothing ->
-                              "#"
-                          )
+          [ a [ class "clr-treenode-link", href ("/categories/" ++ (String.fromInt category.id))
               ] [ text category.name ]
           ]
         ]
@@ -105,41 +103,52 @@ viewCategory : Model -> Html Msg
 viewCategory model =
     case model.selectedCategory of
         Success category ->
-            Html.form [ class "clr-form" ]
+            Html.form [ class "clr-form", onSubmit SaveCategoryDetail ]
                 [ div [ class "clr-form-control" ]
                   [ label [ for "category-name", class "clr-control-label" ]
                     [ text "Category name" ]
                   , div [ class "clr-control-container" ]
                       [ div [ class "clr-input-wrapper" ]
                         [ input [ type_ "text", id "category-name", placeholder "Name", class "clr-input"
-                                , value category.name
+                                , value category.name, onInput SetCategoryName
                                 ]
                               [ Html.node "clr-icon" [ class "clr-validate-icon" ] [] ]
                         ]
                       ]
                   ]
-                , div [class "clr-form-control" ]
+                , div [ class "clr-form-control" ]
                     [ label [ for "category-description", class "clr-control-label" ]
                       [ text "Description" ]
                     , div [ class "clr-control-container" ]
                         [ div [ class "clr-input-wrapper" ]
                           [ input [ type_ "textarea", id "category-description"
                                   , placeholder "Description", class "clr-textarea", value category.description
+                                  , onInput SetCategoryDescription
                                   ] []
                           ]
                         ]
                     ]
-                , div [class "clr-form-control" ]
+                , div [ class "clr-form-control" ]
                     [ label [ for "category-parent", class "clr-control-label" ]
                       [ text "Parent category" ]
                     , div [ class "clr-control-container" ]
-                        [ div [ class "clr-input-wrapper" ]
-                          [ select [ id "category-parent", class "clr-select", value category.description ]
-                            []
+                        [ div [ class "clr-select-wrapper" ]
+                          [ select [ id "category-parent", class "clr-select", onInput SetCategoryParent ]
+                            ([ option [ value "" ] [ text "None" ] ] ++
+                             (List.map
+                                  (\c -> option [ value (String.fromInt c.id)
+                                                , case category.parentCategory of
+                                                      Just parentCategory ->
+                                                          if c.id == parentCategory then selected True
+                                                          else selected False
+                                                      Nothing ->
+                                                          selected False
+                                                ] [ text c.name ]) 
+                                  (flattenCategories model.categories)))
                           ]
                         ]
                     ]
-                    
+                , button [ class "btn btn-primary" ] [ text "Save" ]
                 ]
         _ -> Html.div [] []
         
@@ -147,14 +156,14 @@ viewCategory model =
 getCategories : Cmd Msg
 getCategories =
     Http.get
-        { url = "qsub/api/categories/"
+        { url = "/qsub/api/categories/"
         , expect = expectJson (RemoteData.fromResult >> CategoriesResponse) categoriesDecoder
         }
 
 getCategory : Int -> Cmd Msg
 getCategory id =
     Http.get
-        { url = "qsub/api/categories/" ++ String.fromInt id ++ "/"
+        { url = "/qsub/api/categories/" ++ String.fromInt id ++ "/"
         , expect = expectJson (RemoteData.fromResult >> CategoryResponse) categoryDecoder
         }
         
@@ -166,12 +175,100 @@ init =
     , getCategories )
 
     
-update : Msg -> Model -> ( Model, Cmd Msg)
-update msg model =
+update : Flags -> Msg -> Model -> ( Model, Cmd Msg)
+update flags msg model =
     case msg of
         CategoriesResponse response ->
             ( { model | categories = response }, Cmd.none )
         CategoryResponse response ->
             ( { model | selectedCategory = response }, Cmd.none )
+        SetCategoryName name ->
+            case model.selectedCategory of
+                Success category ->
+                    let
+                        newCategory = { category | name = name }
+                    in
+                        ( { model | selectedCategory = Success newCategory }, Cmd.none )
+                _ -> ( model, Cmd.none )
+        SetCategoryDescription description ->
+            case model.selectedCategory of
+                Success category ->
+                    let
+                        newCategory = { category | description = description }
+                    in
+                        ( { model | selectedCategory = Success newCategory }, Cmd.none )
+                _ -> ( model, Cmd.none )
+        SetCategoryParent parent ->
+            case model.selectedCategory of
+                Success category ->
+                    let
+                        newCategory = { category | parentCategory = String.toInt parent }
+                    in
+                        ( { model | selectedCategory = Success newCategory }, Cmd.none )
+                _ -> ( model, Cmd.none )
+        SaveCategoryDetail ->
+            case model.selectedCategory of
+                Success category ->
+                    let
+                        body = category |> categoryEncoder |> Http.jsonBody
+                    in
+                        ( { model | categories = updateCategories category model.categories }
+                        , Http.request
+                            { method = "PUT"
+                            , url = "/qsub/api/categories/" ++ String.fromInt category.id ++ "/"
+                            , body = body
+                            , headers = [ Http.header "X-CSRFToken" flags.csrftoken ]
+                            , expect = Http.expectJson (RemoteData.fromResult >> CategoryResponse) categoryDecoder
+                            , timeout = Nothing
+                            , tracker = Nothing
+                            }
+                        )
+                _ -> ( model, Cmd.none )
+                    
         _ ->
             ( model, Cmd.none)
+
+
+--saveCategory : Category -> Task Http.Error Category
+--saveCategory category =
+    
+
+updateCategories : Category -> WebData (List Category) -> WebData (List Category)
+updateCategories category categories =
+    case categories of
+        Success cats ->
+            Success (List.map (recursiveCategoryUpdate category) cats)
+        _ ->
+            categories
+
+
+recursiveCategoryUpdate : Category -> Category -> Category
+recursiveCategoryUpdate targetCategory candidateCategory =
+    if targetCategory.id == candidateCategory.id then
+        targetCategory
+    else
+        case candidateCategory.subcategories of
+            Models.Category.SubCategories [] -> candidateCategory
+            Models.Category.SubCategories subcategories ->
+                let
+                    updatedSubcategories =
+                        case subcategories of
+                            [] -> []
+                            children ->
+                                List.map (\c -> recursiveCategoryUpdate targetCategory c) children
+                in
+                    { candidateCategory | subcategories = Models.Category.SubCategories updatedSubcategories }
+
+                
+flattenCategory : Category -> List Category
+flattenCategory category =
+    case category.subcategories of
+        Models.Category.SubCategories subcategories ->
+            [category] ++ List.concatMap flattenCategory subcategories
+                
+flattenCategories : WebData (List Category) -> List Category
+flattenCategories categories =
+    case categories of
+        RemoteData.Success categoriesData ->
+            List.concatMap flattenCategory categoriesData
+        _ -> []

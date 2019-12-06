@@ -69,10 +69,17 @@ class CategoryViewSet(BaseNestedModelViewSet):
     model = Category
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
 
     def list(self, request, *args, **kwargs):
 
         self.queryset = self.queryset.filter(parent_category__isnull=True)
         return super().list(self, request, *args, **kwargs)
+
+    # def update(self, request, *args, **kwargs):
+    #     import ipdb
+    #     ipdb.set_trace()
+    #
+    #     print('foo')
 
 

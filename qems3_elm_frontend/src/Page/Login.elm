@@ -76,10 +76,11 @@ update msg model =
             let
                 body = model |> encodeCreds |> Http.jsonBody
             in
-                ( model, Http.post
-                      { url = "qsub/webapp_login/"
-                      , body = body
-                      , expect = Http.expectJson AuthResponseMsg tokenDecoder
-                      } )
+                ( model, Cmd.batch [ Http.post
+                                         { url = "qsub/webapp_login/"
+                                         , body = body
+                                         , expect = Http.expectJson AuthResponseMsg tokenDecoder
+                                         }
+                                   , Nav.load "/" ] )
         _ ->
             ( model, Cmd.none)

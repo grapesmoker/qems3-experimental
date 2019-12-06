@@ -57,7 +57,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
     def get_fields(self):
         fields = super().get_fields()
-        fields['subcategories'] = CategorySerializer(many=True)
+        fields['subcategories'] = CategorySerializer(many=True, required=False)
         return fields
 
 

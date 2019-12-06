@@ -13,7 +13,7 @@ import Page.Categories as Categories
 import Json.Encode as Encode exposing (..)
 import Json.Decode as Decode exposing (Decoder, list, string)
 import RemoteData exposing (..)
-
+import Models.Flags exposing (Flags)
 
 type alias User =
     { username : String
@@ -25,13 +25,12 @@ type alias Model =
     { route : Route
     , page : Page
     , navKey : Nav.Key
-    , user : User
+    , auth : Login.Model
     , categoriesModel : Categories.Model
+    , flags : Flags
     }
 
-type alias Flags =
-    { csrftoken: String
-    }
+
 
 type Page
     = NotFoundPage
@@ -84,13 +83,13 @@ init flags url navKey =
             { route = Route.parseUrl url
             , page = HomePage
             , navKey = navKey
-            , user = { username = ""
+            , auth = { username = ""
                      , password = ""
-                     , token = ""
                      }
             , categoriesModel = { categories = NotAsked
                                 , selectedCategory = NotAsked
                                 }
+            , flags = flags
             }
     in
         Debug.log (Debug.toString flags)
@@ -117,67 +116,21 @@ update msg model =
             in
                 ( { model | route = newRoute }, Cmd.none )
                     |> initCurrentPage
-        ( LoginPageMsg login, _ ) ->
+        ( LoginPageMsg loginMsg, _ ) ->
             let
-                _ = Debug.log "login" login
+                ( updatedAuth, cmd ) = Login.update loginMsg model.auth
             in
-                case login of
-                    Login.SetUsername data ->
-                        -- Debug.log "setting username to" data
-                        let
-                            oldUser = model.user
-                            newUser = { oldUser | username = data }
-                            _ = Debug.log "the user is now" newUser
-                        in
-                            ( { model | user = newUser }, Cmd.none )
-                    Login.SetPassword data ->
-                        let
-                            oldUser = model.user
-                            newUser = { oldUser | password = data }
-                            _ = Debug.log "the user is now" newUser
-                        in
-                            ( { model | user = newUser }, Cmd.none )
-                    Login.SubmitLogIn ->
-                        let
-                            _ = Debug.log "submitting model" model
-                            body =
-                                model.user |> encodeUser |> Http.jsonBody
-                        in
-                            ( model, Http.post
-                                  { url = "qsub/webapp_login/"
-                                  , body = body
-                                  , expect = Http.expectJson AuthResponseMsg tokenDecoder
-                                  } )
-                    _ ->
-                        Debug.log "some other thing happening"
-                        ( model, Cmd.none )
+                ( { model | auth = updatedAuth }, cmd |> Cmd.map LoginPageMsg )
 
         ( AuthResponseMsg result, _ ) ->
-            let
-                _ = Debug.log "result" result
-            in
-                ( model, Cmd.none )
+            ( model, Cmd.none )
 
         ( CategoriesPageMsg categories, CategoriesPage ) ->
             let
                 ( updatedCategoriesModel, cmd ) =
-                    Categories.update categories model.categoriesModel
+                    Categories.update model.flags categories model.categoriesModel
             in
                 ( { model | categoriesModel = updatedCategoriesModel }, cmd |> Cmd.map CategoriesPageMsg )
-                
-            
---            case categories of
---                Categories.CategoriesResponse response ->
-                    
-                -- Categories.CategoriesResponse response ->
-                --     let
-                --         _ = Debug.log "response" response
-                --     in
-                --         ( model, Cmd.none )
---                _ ->
---                    ( model, Cmd.none )
-                -- ( model, Categories.getCategories |> Cmd.map CategoriesPageMsg )
-
                     
         ( _, _ ) ->
             ( model, Cmd.none )
@@ -259,18 +212,3 @@ tokenDecoder : Decoder String
 tokenDecoder =
     Decode.field "token" Decode.string
 
-
-getToken : Model -> Result Http.Error String -> ( Model, Cmd Msg )
-getToken model result =
-    case result of
-        Ok newToken ->
-            let
-                oldUser = model.user
-                newUser = { oldUser | token = newToken, password = "" }
-            in
-                ( { model | user = newUser }, Cmd.none )
-        Err error ->
-            let
-                _ = Debug.log "error" error
-            in
-                ( model, Cmd.none )
