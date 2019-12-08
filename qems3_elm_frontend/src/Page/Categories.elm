@@ -29,6 +29,7 @@ type Msg
     | SetCategoryParent String
     | ShowCategoryDetail Category
     | SaveCategoryDetail
+    | CategoriesReloaded (Result Http.Error (List Category))
 
 view : Model -> Html Msg
 view model =
@@ -160,6 +161,18 @@ getCategories =
         , expect = expectJson (RemoteData.fromResult >> CategoriesResponse) categoriesDecoder
         }
 
+getCategoriesTask : Task Http.Error (List Category)
+getCategoriesTask =
+    Http.task
+        { method = "GET"
+        , headers = []
+        , url = "/qsub/api/categories/"
+        , body = Http.emptyBody
+        , resolver = Http.stringResolver <| handleJson <| categoriesDecoder
+        , timeout = Nothing
+        }
+            
+
 getCategory : Int -> Cmd Msg
 getCategory id =
     Http.get
@@ -209,30 +222,66 @@ update flags msg model =
         SaveCategoryDetail ->
             case model.selectedCategory of
                 Success category ->
-                    let
-                        body = category |> categoryEncoder |> Http.jsonBody
-                    in
-                        ( { model | categories = updateCategories category model.categories }
-                        , Http.request
-                            { method = "PUT"
-                            , url = "/qsub/api/categories/" ++ String.fromInt category.id ++ "/"
-                            , body = body
-                            , headers = [ Http.header "X-CSRFToken" flags.csrftoken ]
-                            , expect = Http.expectJson (RemoteData.fromResult >> CategoryResponse) categoryDecoder
-                            , timeout = Nothing
-                            , tracker = Nothing
-                            }
-                        )
+                    ( model, Task.attempt CategoriesReloaded (saveAndReload flags category))
+                    -- let
+                    --     body = category |> categoryEncoder |> Http.jsonBody
+                    -- in
+                    --     { 
+                        -- ( { model | categories = updateCategories category model.categories }
+                        -- , Cmd.none 
+                        -- )
                 _ -> ( model, Cmd.none )
+        CategoriesReloaded result ->
+            case result of
+                Ok categories ->
+                    ( { model | categories = Success categories }, Cmd.none )
+                _ ->
+                    let
+                        _ = Debug.log "some error happened" result
+                    in
+                        ( model, Cmd.none )
+                
                     
         _ ->
             ( model, Cmd.none)
 
 
---saveCategory : Category -> Task Http.Error Category
---saveCategory category =
-    
+handleJson : Decode.Decoder a -> Http.Response String -> Result Http.Error a
+handleJson decoder response =
+    case response of
+        Http.GoodStatus_ _ body ->
+            case Decode.decodeString decoder body of
+                Err _ ->
+                    Err (Http.BadBody body)
+                Ok result ->
+                    Ok result
+        _ ->
+            Err (Http.BadStatus 500)
 
+saveCategory : Flags -> Category -> Task Http.Error Category
+saveCategory flags category =
+    let
+        body = category |> categoryEncoder |> Http.jsonBody
+    in
+        Http.task
+            { method = "PUT"
+            , url = "/qsub/api/categories/" ++ String.fromInt category.id ++ "/"
+            , body = body
+            , headers = [ Http.header "X-CSRFToken" flags.csrftoken ]
+            , resolver = Http.stringResolver <| handleJson <| categoryDecoder
+            , timeout = Nothing
+            }
+
+
+saveAndReload : Flags -> Category -> Task Http.Error (List Category)
+saveAndReload flags category =
+    saveCategory flags category
+        --|> Task.mapError HttpError
+        |> Task.andThen
+           (\_ ->
+                getCategoriesTask )
+ 
+           
 updateCategories : Category -> WebData (List Category) -> WebData (List Category)
 updateCategories category categories =
     case categories of
