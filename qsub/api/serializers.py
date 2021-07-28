@@ -55,10 +55,7 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = ['id', 'name', 'description', 'parent_category', 'path', 'subcategories']
 
-    def get_fields(self):
-        fields = super().get_fields()
-        fields['subcategories'] = CategorySerializer(many=True, required=False)
-        return fields
+    subcategories = serializers.PrimaryKeyRelatedField(many=True, queryset=Category.objects.all(), required=False)
 
 
 class CategoryEntrySerializer(serializers.ModelSerializer):

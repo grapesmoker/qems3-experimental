@@ -12,6 +12,7 @@ from rest_framework.authtoken.models import Token
 
 from qsub.api.serializers import UserSerializer
 
+
 @ensure_csrf_cookie
 def index(request):
 
@@ -49,7 +50,7 @@ def user_profile(request):
         user = UserSerializer(request.user)
         return JsonResponse(user.data)
     else:
-        return HttpResponse(None)
+        return JsonResponse(None, safe=False)
 
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)

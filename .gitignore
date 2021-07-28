@@ -109,3 +109,6 @@ venv.bak/
 # Elm compiled
 *.elmi
 *.elmo
+
+# node modules
+**/node_modules/**

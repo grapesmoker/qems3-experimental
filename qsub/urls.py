@@ -11,21 +11,21 @@ router = ExtendedSimpleRouter()
 question_set_router = router.register(
     r'api/question_sets',
     api_views.QuestionSetViewSet,
-    base_name='question_sets')
+    basename='question_sets')
 
 distribution_router = router.register(
     r'api/distributions',
     api_views.DistributionViewSet,
-    base_name='distributions'
+    basename='distributions'
 )
 
 categories_router = router.register(
     r'api/categories',
     api_views.CategoryViewSet,
-    base_name='categories'
+    basename='categories'
 )
 
 urlpatterns = router.urls + [
-    url(r'webapp_login/', app_views.webapp_login, name='login'),
+    url(r'webapp_login/$', app_views.webapp_login, name='login'),
     url(r'user/', app_views.user_profile, name='user')
 ]
