@@ -34,7 +34,7 @@ psycopg2-binary==2.8.2
 python-dateutil==2.7.5
 python3-openid==3.1.0
 pytz==2018.7
-PyYAML==3.13
+PyYAML==5.4
 requests==2.18.4
 requests-oauthlib==1.0.0
 semantic-version==2.5.0
